@@ -35,18 +35,24 @@
       "Version": "2.0.4",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteUsername": "statnet",
-      "RemoteRepo": "EpiModel",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "1179a293299f5406baf041225af2ad6668fbfa64",
       "RemoteHost": "api.github.com",
-      "Hash": "f6bde4966a326237ecf950bde4ffdab9"
+      "RemoteRepo": "EpiModel",
+      "RemoteUsername": "statnet",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "7bf5abcc3a376d1e1ecc288e77d9f94d7acfe12a",
+      "Hash": "a682d74d9f20440fc870e1a519d132ec"
     },
     "EpiModelHIV": {
       "Package": "EpiModelHIV",
-      "Version": "2.0.5",
-      "Source": "unknown",
-      "Hash": "338e9cd0ef67ca3896005b8ca3f3f393"
+      "Version": "1.5.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "EpiModelHIV-p",
+      "RemoteUsername": "EpiModel",
+      "RemoteRef": "PAFGuidelines",
+      "RemoteSha": "0b92971e161d9bb6d9590ba9364cc727178923b5",
+      "Hash": "cfdcfc2c70f182585ce6a460b29dcdb5"
     },
     "EpiModelHPC": {
       "Package": "EpiModelHPC",
@@ -258,10 +264,10 @@
     },
     "diffobj": {
       "Package": "diffobj",
-      "Version": "0.3.2",
+      "Version": "0.3.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "16533929cf545f3c9b796780cccf5eff"
+      "Hash": "55fae7ec1418d2a47bd552571673d1af"
     },
     "digest": {
       "Package": "digest",
@@ -692,10 +698,10 @@
     },
     "robustbase": {
       "Package": "robustbase",
-      "Version": "0.93-6",
+      "Version": "0.93-7",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "241454e22c9d26b11669b78d06706b41"
+      "Hash": "eed524235ccf3c4a0775791cd9499d65"
     },
     "rprojroot": {
       "Package": "rprojroot",
