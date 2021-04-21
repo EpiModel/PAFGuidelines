@@ -1,7 +1,7 @@
 
 ##
 ## 04. Epidemic Model Burnin, Stage 1, Parameter Storage
-## CombPrevNet (https://github.com/EpiModel/CombPrevNet)
+## PAFGuidelines (https://github.com/EpiModel/PAFGuidelines)
 ##
 
 

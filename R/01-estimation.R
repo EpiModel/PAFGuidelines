@@ -1,7 +1,7 @@
 
 ##
 ## 01. Network Model Estimation
-## CombPrevNet (https://github.com/EpiModel/CombPrevNet)
+## PAFGuidelines (https://github.com/EpiModel/PAFGuidelines)
 ##
 
 ## Packages ##

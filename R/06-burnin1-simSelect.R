@@ -1,7 +1,7 @@
 
 ##
 ## 06. Epidemic Model Burnin, Stage 1, Simulation Selection
-## CombPrevNet (https://github.com/EpiModel/CombPrevNet)
+## PAFGuidelines (https://github.com/EpiModel/PAFGuidelines)
 ##
 
 suppressMessages(library("EpiModelHIV"))
