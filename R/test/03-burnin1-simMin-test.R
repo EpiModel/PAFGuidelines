@@ -4,14 +4,13 @@
 ## PAFGuidelines (https://github.com/EpiModel/PAFGuidelines)
 ##
 
+rm(list = ls())
+
 ## Packages
-library("methods")
 pkgload::load_all("../EpiModelHIV-p")
 
 ## Environmental Arguments
 pull_env_vars()
-
-nsims <- ncores <- 1
 
 ## Parameters
 netstats <- readRDS("data/input/netstats.rds")
@@ -46,7 +45,7 @@ param <- param_msm(netstats = netstats,
 )
 init <- init_msm()
 
-# pkgload::load_all("~/git/EpiModelHIV-p")
+pkgload::load_all("../EpiModelHIV-p")
 control <- control_msm(
   simno = fsimno,
   nsteps = 52 * 10,
@@ -54,8 +53,32 @@ control <- control_msm(
   ncores = ncores,
   save.nwstats = TRUE,
   raw.output = FALSE,
-  verbose = FALSE
+  verbose = TRUE,
+  initialize.FUN = initialize_msm,
+  aging.FUN = aging_msm,
+  departure.FUN = departure_msm,
+  arrival.FUN = arrival_msm,
+  stitest.FUN = sti_test_msm_paf,
+  partident.FUN = partident_msm,
+  hivtest.FUN = hivtest_msm,
+  hivtx.FUN = hivtx_msm,
+  hivprogress.FUN = hivprogress_msm,
+  hivvl.FUN = hivvl_msm,
+  resim_nets.FUN = simnet_msm,
+  acts.FUN = acts_msm,
+  condoms.FUN = condoms_msm,
+  position.FUN = position_msm,
+  prep.FUN = prep_msm,
+  hivtrans.FUN = hivtrans_msm,
+  stitrans.FUN = stitrans_msm,
+  stirecov.FUN = stirecov_msm,
+  stitx.FUN = stitx_msm,
+  prev.FUN = prevalence_msm,
+  verbose.FUN = verbose.net
 )
+
+debugonce(sti_test_msm_paf)
 
 ## Simulation
 sim <- netsim(est, param, init, control)
+
