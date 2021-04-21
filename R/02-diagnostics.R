@@ -7,13 +7,12 @@
 ## Packages ##
 rm(list = ls())
 suppressMessages(library("EpiModelHIV"))
-library("EpiABC")
 
 est <- readRDS("data/input/netest.rds")
 netstats <- readRDS("data/input/netstats.rds")
 
 ncores <- parallel::detectCores() / 2
-nsims <- ncores * 1
+nsims <- ncores * 2
 
 # Main --------------------------------------------------------------------
 

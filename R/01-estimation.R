@@ -8,16 +8,14 @@
 rm(list = ls())
 suppressMessages(library("EpiModelHIV"))
 suppressMessages(library("ARTnet"))
-if (!dir.exists("out/est"))
-  dir.create("out/est")
 
 epistats <- build_epistats(
   geog.lvl = "city",
   geog.cat = "Atlanta",
-  init.hiv.prev = c( 0.33, 0.137, 0.084),
+  init.hiv.prev = c(0.33, 0.137, 0.084),
   race = TRUE
 )
-saveRDS(epistats, file = "out/est/epistats.rds")
+saveRDS(epistats, file = "data/input/epistats.rds")
 
 netparams <- build_netparams(epistats = epistats, smooth.main.dur = TRUE)
 netstats <- build_netstats(
@@ -26,7 +24,7 @@ netstats <- build_netstats(
   expect.mort = 0.000478213,
   network.size = 10000
 )
-saveRDS(netstats, file = "out/est/netstats.rds")
+saveRDS(netstats, file = "data/input/netstats.rds")
 
 # 0. Initialize Network ---------------------------------------------------
 
@@ -160,4 +158,4 @@ fit_inst <- netest(nw_inst,
 
 out <- list(fit_main, fit_casl, fit_inst)
 
-saveRDS(out, file = "out/est/netest.rds")
+saveRDS(out, file = "data/input/netest.rds")
