@@ -30,20 +30,32 @@ param <- param_msm(netstats = netstats,
 
                    truncate.plist = 1,
                    part.ident.start = Inf,
-                   part.index.window = 0,
-                   part.ident.main.window = 120,
-                   part.ident.casl.window = 120,
-                   part.ident.ooff.window = 12,
-                   part.ident.main.prob = 0.5,
-                   part.ident.casl.prob = 0.5,
-                   part.ident.ooff.prob = 0.5,
-                   part.hiv.test.rate = c(0.5, 0.5, 0.5),
-                   part.prep.start.prob = 0.5,
-                   part.tx.init.prob = c(0.6, 0.6, 0.8),
-                   part.tx.halt.prob = c(0.00001, 0.00001, 0.00001),
-                   part.tx.reinit.prob = c(0.05, 0.05, 0.05)
+
+                   riskhist.int = 182,
+                   stitest.start = 1,
+                   stitest.active.int = 52,
+                   tst.rect.sti.rr = 1,
+                   sti.highrisktest.int = 26,
+                   stitest.elig.model = "all",
+                   stianntest.gc.hivneg.coverage = 0.44,
+                   stianntest.ct.hivneg.coverage = 0.44,
+                   stihighrisktest.gc.hivneg.coverage = 0.0,
+                   stihighrisktest.ct.hivneg.coverage = 0.0,
+                   stianntest.gc.hivpos.coverage = 0.61,
+                   stianntest.ct.hivpos.coverage = 0.61,
+                   stihighrisktest.gc.hivpos.coverage = 0.0,
+                   stihighrisktest.ct.hivpos.coverage = 0.0,
+                   stianntest.cov.method = "curr",
+                   stihighrisktest.cov.method = "curr",
+                   partnercutoff = 1,
+                   testing.pattern.sti = "interval",
+                   tst.rect.sti.rr.hivneg = 0.48,
+                   tst.rect.sti.rr.hivpos = 0.63
 )
-init <- init_msm()
+init <- init_msm(prev.ugc = 0.01,
+                 prev.rgc = 0.01,
+                 prev.uct = 0.01,
+                 prev.rct = 0.01)
 
 pkgload::load_all("../EpiModelHIV-p")
 control <- control_msm(
@@ -77,7 +89,7 @@ control <- control_msm(
   verbose.FUN = verbose.net
 )
 
-debugonce(sti_test_msm_paf)
+# debugonce(sti_test_msm_paf)
 
 ## Simulation
 sim <- netsim(est, param, init, control)
