@@ -99,7 +99,7 @@ param <- param_msm(
   ct.asympt.prob.tx = rep(1, 3), # prob of starting tx if diagnosed but asympt
   sti.cond.eff = 0.90, # default
   sti.cond.fail = c(0.2, 0.2, 0.2), # default
-  # Calibrate these
+  # Calibrate these **NO**
   hiv.rgc.rr = 2.78,
   hiv.ugc.rr = 1.73,
   hiv.rct.rr = 2.78,
