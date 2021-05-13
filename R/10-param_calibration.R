@@ -94,6 +94,19 @@ info$unique_proposals <- unique_proposals
 
 slurm_wf_tmpl_dir("inst/slurm_wf/", info$root_dir, force = T)
 
+if (test_simulation) {
+  control_test <- control
+  control_test$nsteps <- 1 * 52
+  control_test$nsims <- 1
+  control_test$ncores <- 1
+  control_test$verbose <- TRUE
+
+  run_netsim_fun(
+    param_proposals[[1]], sim_nums[[1]],
+    orig, param, init, control_test, info
+  )
+}
+
 shared_res <- list(
   partition = partition,
   account = if (partition == "csde") "csde" else "csde-ckpt",
@@ -110,18 +123,6 @@ slurm_wf_Map(
   MoreArgs = list(orig = orig, param = param, init = init, control = control,
                   info = info)
 )
-
-if (test_simulation) {
-  control$nsteps <- 1 * 52
-  control$nsims <- 1
-  control$ncores <- 1
-  control$verbose <- TRUE
-
-  run_netsim_fun(
-    param_proposals[[1]], sim_nums[[1]],
-    orig, param, init, control, info
-  )
-}
 
 # Create out dir and save params
 fs::dir_create(fs::path(paths$local_out, paths$jobs_dir))
