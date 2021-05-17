@@ -26,6 +26,17 @@ epi_tracker_by_race <- function(ls_funs, races = 1:3,
 }
 
 # Trackers ---------------------------------------------------------------------
+epi_n <- function(r_ind) {
+  function(dat, at) {
+    needed_attributes <- c("race", "active")
+    with(get_attr_list(dat, needed_attributes), {
+      sum(race %in% r_ind & active == 1, na.rm = TRUE)
+    })
+  }
+}
+
+# HIV Trackers
+
 epi_s <- function(r_ind) {
   function(dat, at) {
     needed_attributes <- c("race", "status")
@@ -97,6 +108,77 @@ epi_i_sup_dur <- function(r_ind) {
           status == 1 &
           at - vl.last.usupp >= 52,
           na.rm = TRUE)
+    })
+  }
+}
+
+epi_linked_time <- function(weeks) {
+  function(r_ind) {
+    function(dat, at) {
+      needed_attributes <- c("race", "tx.init.time", "diag.time")
+      with(get_attr_list(dat, needed_attributes), {
+        sum(
+          race %in% r_ind &
+          tx.init.time - diag.time <= weeks,
+          na.rm = TRUE
+        )
+      })
+    }
+  }
+}
+
+# STI trackers
+
+epi_gc_i <- function(r_ind) {
+  function(dat, at) {
+    needed_attributes <- c("race", "rGC", "uGC")
+    with(get_attr_list(dat, needed_attributes), {
+      sum(
+        race %in% r_ind &
+        (rGC == 1 | uGC == 1),
+        na.rm = TRUE
+      )
+    })
+  }
+}
+
+epi_ct_i <- function(r_ind) {
+  function(dat, at) {
+    needed_attributes <- c("race", "rCT", "uCT")
+    with(get_attr_list(dat, needed_attributes), {
+      sum(
+        race %in% r_ind &
+        (rCT == 1 | uCT == 1),
+        na.rm = TRUE
+      )
+    })
+  }
+}
+
+epi_gc_s <- function(r_ind) {
+  function(dat, at) {
+    needed_attributes <- c("race", "rGC", "uGC")
+    with(get_attr_list(dat, needed_attributes), {
+      sum(
+        race %in% r_ind &
+        rGC == 0 &
+        uGC == 0,
+        na.rm = TRUE
+      )
+    })
+  }
+}
+
+epi_ct_s <- function(r_ind) {
+  function(dat, at) {
+    needed_attributes <- c("race", "rCT", "uCT")
+    with(get_attr_list(dat, needed_attributes), {
+      sum(
+        race %in% r_ind &
+        rCT == 0 &
+        uCT == 0,
+        na.rm = TRUE
+      )
     })
   }
 }

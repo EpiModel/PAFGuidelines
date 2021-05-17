@@ -1,9 +1,10 @@
-library(EpiModelHIV)
-# pkgload::load_all("../EpiModelHIV-p/")
+# library(EpiModelHIV)
+pkgload::load_all("../EpiModelHIV-p/")
 
 # Epi Trackers
 source("R/utils-epi_trackers.R")
 ls_trackers <- list(
+  n             = epi_n,
   s             = epi_s,
   s_prep_elig   = epi_s_prep_elig,
   s_prep        = epi_s_prep,
@@ -12,6 +13,11 @@ ls_trackers <- list(
   i_tx          = epi_i_tx,
   i_sup         = epi_i_sup,
   # i_sup_dur     = epi_i_sup_dur,
+  linked1m      = epi_linked_time(4),
+  gc_i          = epi_gc_i,
+  ct_i          = epi_ct_i,
+  gc_s          = epi_gc_s,
+  ct_s          = epi_ct_s,
   prep_start    = epi_prep_start,
   prep_time_on  = epi_prep_time_on
 )
@@ -116,6 +122,7 @@ param <- param_msm(
   testing.pattern.sti = "interval",
   tst.rect.sti.rr.hivneg = 0.48,
   tst.rect.sti.rr.hivpos = 0.63,
+  sti.correlation.time = 12,
   # High Risk testing
   stitest.elig.model = "all",
   stihighrisktest.cov.method = "curr",
