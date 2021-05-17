@@ -1,5 +1,5 @@
-# library(EpiModelHIV)
-pkgload::load_all("../EpiModelHIV-p/")
+library(EpiModelHIV)
+# pkgload::load_all("../EpiModelHIV-p/")
 
 # Epi Trackers
 source("R/utils-epi_trackers.R")
@@ -21,7 +21,7 @@ ls_trackers <- list(
   prep_start    = epi_prep_start,
   prep_time_on  = epi_prep_time_on
 )
-epi_trackers <- epi_tracker_by_race(ls_trackers, full = TRUE, indiv = FALSE)
+epi_trackers <- epi_tracker_by_race(ls_trackers, full = F, indiv = TRUE)
 
 
 # Params and inits

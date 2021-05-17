@@ -27,7 +27,7 @@ lnt <- TRUE # if FALSE: set `require.lnt` to FALSE and adjust ` prep.start.prob`
 source("R/utils-params.R", local = TRUE)
 
 control <- control_msm(
-  nsteps = 60 * 52,
+  nsteps = 70 * 52,
   nsims = 28,
   ncores = 28,
   save.nwstats = FALSE,
@@ -38,8 +38,8 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 
 param_proposals <- list(
-  uct.tprob = as.list(seq(0.1, 0.5, length.out = 2)),
-  ugc.tprob = as.list(seq(0.1, 0.5, length.out = 2))
+  uct.tprob = as.list(seq(0.1, 0.5, length.out = 5)),
+  ugc.tprob = as.list(seq(0.1, 0.5, length.out = 5))
 )
 
 # Use this line to run only the default values
