@@ -6,13 +6,10 @@ df_b <- map_dfr(jobs, ~ as_tibble(.x$data))
 
 param_proposals <- jobs[[1]]$infos$param_proposals
 
-
 df <- df_b %>%
   mutate(
     gc_batch = vapply(batch, function(x) param_proposals[[x]]$ugc.tprob, 0),
-    # gc_batch = param_proposals[[batch]]$ugc.tprob,
     ct_batch = vapply(batch, function(x) param_proposals[[x]]$uct.tprob, 0)
-    # ct_batch = param_proposals[[batch]]$uct.tprob
   )
 
 df %>%
@@ -88,6 +85,7 @@ df %>%
 
 param_proposals[c(3, 8, 13, 18, 23)]
 
+param_proposals[c(17, 18, 20)]
 
 df %>%
   filter(time > max(time) - 10 * 52) %>%
