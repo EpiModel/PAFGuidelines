@@ -77,8 +77,8 @@ df %>%
   filter(time > max(time) - 10 * 52) %>%
   group_by(param_batch) %>%
   summarise(
-    ir100.gc = median( incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200),
-    ir100.ct = median( incid.ct / ( ct_s___B + ct_s___H + ct_s___W) * 5200)
+    ir100.gc = median(incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200),
+    ir100.ct = median(incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200)
   ) %>%
   mutate(
     ir100.gc = ir100.gc - 12.81,
@@ -86,6 +86,14 @@ df %>%
   ) %>%
   print(n = 200)
 
-param_proposals[c(2, 12, 17)]
+param_proposals[c(3, 8, 13, 18, 23)]
 
 
+df %>%
+  filter(time > max(time) - 10 * 52) %>%
+  group_by(param_batch) %>%
+  summarise(
+    prev_gc = median((gc_i___B + gc_i___H + gc_i___W) / num),
+    prev_ct = median(incid.ct / (ct_i___B + ct_i___H + ct_i___W) / num)
+  ) %>%
+  print(n = 200)

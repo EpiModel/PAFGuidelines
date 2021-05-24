@@ -5,9 +5,9 @@ test_all_combination <- TRUE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
 batch_per_set <- 10      # How many 28 replications to do per parameter
-steps_to_keep <- NULL #52 * 2 # Steps to keep in the output df. If NULL, return sim obj
+steps_to_keep <- 52 * 2 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_sti_baseline"
+job_name <- "PAF_sti"
 ssh_host <- "hyak_mox"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -38,8 +38,8 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 
 param_proposals <- list(
-  uct.tprob = as.list(seq(0.1, 0.5, length.out = 5)),
-  ugc.tprob = as.list(seq(0.1, 0.5, length.out = 5))
+  uct.tprob = as.list(seq(0.175, 0.225, length.out = 5)),
+  ugc.tprob = as.list(seq(0.25, 0.35, length.out = 5))
 )
 
 # Use this line to run only the default values

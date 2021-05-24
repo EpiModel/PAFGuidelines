@@ -183,8 +183,8 @@ if (lnt == FALSE) {
 }
 
 init <- init_msm(
-  prev.ugc = 0.01,
-  prev.rct = 0.01,
-  prev.rgc = 0.01,
-  prev.uct = 0.01
+  prev.ugc = 0.05,
+  prev.rct = 0.05,
+  prev.rgc = 0.05,
+  prev.uct = 0.05
 )

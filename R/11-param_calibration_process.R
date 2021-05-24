@@ -5,7 +5,7 @@ library(tidyr)
 library(EpiModel)
 
 # One or many job_names
-job_names <- "PAF_sti_baseline"
+job_names <- "PAF_sti_baseline3"
 job_last_n <- NULL # if not NULL, get last N jobs. Otherwise, use job_names
 
 if (!is.null(job_last_n))
@@ -18,7 +18,7 @@ needed_trackers <- c(
   "n",
   "i", "i_dx", "i_sup", "linked1m",
   "s", "s_prep", "s_prep_elig",
-  "gc_s", "ct_s"
+  "gc_s", "ct_s", "gc_i", "ct_i"
 )
 
 needed_pops <- c("B", "H", "W")
@@ -30,7 +30,7 @@ needed_trackers <- vapply(
 )
 
 needed_cols <- c(
- "sim", "time", "batch", "param_batch",
+ "sim", "time", "batch", "param_batch", "num",
   "incid.gc", # "incid.gc.B", "incid.gc.H", "incid.gc.W",
   "incid.ct", # "incid.ct.B", "incid.ct.H", "incid.ct.W",
   needed_trackers
