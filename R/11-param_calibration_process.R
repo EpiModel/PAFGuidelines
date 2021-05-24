@@ -2,6 +2,7 @@ library(data.table)
 library(purrr)
 library(dplyr)
 library(tidyr)
+library(EpiModel)
 
 # One or many job_names
 job_names <- "PAF_sti_baseline"
@@ -30,8 +31,8 @@ needed_trackers <- vapply(
 
 needed_cols <- c(
  "sim", "time", "batch", "param_batch",
-  "incid.gc.B", "incid.gc.H", "incid.gc.W",
-  "incid.ct.B", "incid.ct.H", "incid.ct.W",
+  "incid.gc", # "incid.gc.B", "incid.gc.H", "incid.gc.W",
+  "incid.ct", # "incid.ct.B", "incid.ct.H", "incid.ct.W",
   needed_trackers
 )
 
@@ -48,7 +49,7 @@ for (job in job_names) {
     btch <- as.numeric(stringr::str_extract(fs::path_file(fle), "\\d+"))
     sim <- readRDS(fle)
     dff <- as.data.table(sim)
-    dff[, `:=`(batch = btch)]
+    dff[, `:=`(batch = btch, param_batch = infos$unique_proposals[btch])]
     keep_cols <- intersect(needed_cols, names(dff))
     df_ls[[btch]] <- dff[, ..keep_cols]
   }
@@ -56,5 +57,4 @@ for (job in job_names) {
   jobs[[job]]$data <- rbindlist(df_ls, fill = TRUE)
 }
 
-df <- map_dfr(jobs, ~ as_tibble(.x$data))
-saveRDS(df, "out/scdf.rds")
+saveRDS(jobs, "out/calib_jobs.rds")

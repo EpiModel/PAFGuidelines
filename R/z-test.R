@@ -26,7 +26,6 @@ df <- as.data.frame(sim)
 library(tidyverse)
 theme_set(theme_light())
 
-
 df %>%
   mutate(
     ir100 = i___ALL / s___ALL * 5200,
