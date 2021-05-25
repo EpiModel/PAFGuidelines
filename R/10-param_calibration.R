@@ -38,8 +38,8 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 
 param_proposals <- list(
-  uct.tprob = as.list(seq(0.175, 0.225, length.out = 5)),
-  ugc.tprob = as.list(seq(0.3, 0.35, length.out = 5))
+  uct.tprob = as.list(seq(0.2, 0.225, length.out = 5)),
+  ugc.tprob = as.list(seq(0.325, 0.35, length.out = 5))
 )
 
 # Use this line to run only the default values

@@ -83,15 +83,8 @@ df %>%
   ) %>%
   print(n = 200)
 
-param_proposals[c(3, 8, 13, 18, 23)]
+#GC
+lapply(param_proposals[c(11, 12, 19, 20)], \(x) x$ugc.tprob)
+#CT
+lapply(param_proposals[c(4, 9, 14, 19, 25)], \(x) x$uct.tprob)
 
-param_proposals[c(17, 18, 20)]
-
-df %>%
-  filter(time > max(time) - 10 * 52) %>%
-  group_by(param_batch) %>%
-  summarise(
-    prev_gc = median((gc_i___B + gc_i___H + gc_i___W) / num),
-    prev_ct = median(incid.ct / (ct_i___B + ct_i___H + ct_i___W) / num)
-  ) %>%
-  print(n = 200)
