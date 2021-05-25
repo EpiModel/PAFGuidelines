@@ -84,10 +84,10 @@ param <- param_msm(
   ## stitestguidelines appendix table s2
   #
   # Calibrate these
-  rgc.tprob      = 0.5364,
-  ugc.tprob      = 0.4347,
-  rct.tprob      = 0.2494,
-  uct.tprob      = 0.1944,
+  ugc.tprob      = 0.3375,
+  rgc.tprob      = 0.4331551, # plogis(qlogis(param$ugc.tprob) + log(1.5))
+  uct.tprob      = 0.21875,
+  rct.tprob      = 0.2957746, # plogis(qlogis(param$uct.tprob) + log(1.5))
   #
   rgc.sympt.prob = 0.16,
   ugc.sympt.prob = 0.80,
