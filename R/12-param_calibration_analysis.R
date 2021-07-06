@@ -6,6 +6,7 @@ df_b <- map_dfr(jobs, ~ as_tibble(.x$data))
 
 param_proposals <- jobs[[1]]$infos$param_proposals
 
+df <- df_b
 df <- df_b %>%
   mutate(
     gc_batch = vapply(batch, function(x) param_proposals[[x]]$ugc.tprob, 0),

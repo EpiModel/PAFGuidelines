@@ -5,7 +5,7 @@ library(tidyr)
 library(EpiModel)
 
 # One or many job_names
-job_names <- "PAF_sti"
+job_names <- "K_PAF_sti"
 job_last_n <- NULL # if not NULL, get last N jobs. Otherwise, use job_names
 
 if (!is.null(job_last_n))
@@ -33,6 +33,7 @@ needed_cols <- c(
  "sim", "time", "batch", "param_batch", "num",
   "incid.gc", # "incid.gc.B", "incid.gc.H", "incid.gc.W",
   "incid.ct", # "incid.ct.B", "incid.ct.H", "incid.ct.W",
+  "ir100.gc", "ir100.ct",
   needed_trackers
 )
 

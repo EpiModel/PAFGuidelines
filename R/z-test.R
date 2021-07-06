@@ -1,6 +1,7 @@
 nsims <- ncores <- 1
 lnt <- TRUE
 source("R/utils-params.R")
+pkgload::load_all("../EpiModelHIV-p/")
 # orig <- readRDS("out/est/restart.rds")
 
 ## Parameters
