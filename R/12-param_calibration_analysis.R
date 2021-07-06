@@ -17,6 +17,8 @@ df <- df_b %>%
 df %>%
   filter(time > max(time) - 10 * 52) %>%
   group_by(param_batch) %>%
+  summarise(across(c(ir100.gc, ir100.ct), median))
+
   summarise(
     ir100.gc = median(incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200),
     ir100.ct = median(incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200)

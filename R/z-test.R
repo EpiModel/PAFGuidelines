@@ -9,8 +9,9 @@ netstats <- readRDS("out/est/netstats.rds")
 epistats <- readRDS("out/est/epistats.rds")
 est <- readRDS("out/est/netest.rds")
 
+ncores <- 4
 control <- control_msm(
-  nsteps = 52 * 80,
+  nsteps = 52 * 10,
   nsims = ncores,
   ncores = ncores,
   verbose = FALSE
