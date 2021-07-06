@@ -45,9 +45,9 @@
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "EpiModelHIV-p",
       "RemoteRef": "PAFGuidelines",
-      "RemoteSha": "6dc7bb4b99f54bc39c918045ec3cd30ad576ecad",
+      "RemoteSha": "fbf0b70128a04040225c73153e12b1130dd4d5ba",
       "RemoteHost": "api.github.com",
-      "Hash": "3c3faf81c964cfe63f03447d1fdf6214"
+      "Hash": "8cc312870f488cf5140cbf562498d9b9"
     },
     "EpiModelHPC": {
       "Package": "EpiModelHPC",
@@ -256,6 +256,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "eb265b52c7e032cc8276f0c96c14466c"
+    },
+    "desc": {
+      "Package": "desc",
+      "Version": "1.3.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b6963166f7f10b970af1006c462ce6cd"
     },
     "digest": {
       "Package": "digest",
@@ -600,6 +607,13 @@
       "Repository": "CRAN",
       "Hash": "01f28d4278f15c76cddbea05899c5d6f"
     },
+    "pkgload": {
+      "Package": "pkgload",
+      "Version": "1.2.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "463642747f81879e6752485aefb831cf"
+    },
     "prettyunits": {
       "Package": "prettyunits",
       "Version": "1.1.1",
@@ -718,6 +732,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "eed524235ccf3c4a0775791cd9499d65"
+    },
+    "rprojroot": {
+      "Package": "rprojroot",
+      "Version": "2.0.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "249d8cd1e74a8f6a26194a91b47f21d1"
     },
     "rstudioapi": {
       "Package": "rstudioapi",
