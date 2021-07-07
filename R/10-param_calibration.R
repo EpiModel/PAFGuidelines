@@ -4,10 +4,10 @@ test_simulation <- TRUE
 test_all_combination <- TRUE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
-batch_per_set <- 10      # How many 28 replications to do per parameter
-steps_to_keep <- 52 * 5 # Steps to keep in the output df. If NULL, return sim obj
+batch_per_set <- 20      # How many 28 replications to do per parameter
+steps_to_keep <- 52 * 10 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_sti"
+job_name <- "PAF_try"
 ssh_host <- "hyak_mox"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -43,7 +43,7 @@ param_proposals <- list(
 )
 
 # Use this line to run only the default values
-# param_proposals <- list(base_params__ = TRUE)
+param_proposals <- list(base_params__ = TRUE)
 
 # Finalize param_proposal list
 if (test_all_combination) {

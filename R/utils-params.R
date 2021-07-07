@@ -31,6 +31,7 @@ epistats <- readRDS("out/est/epistats.rds")
 
 full_tx_eff <- rep(1, 3)
 prep_start_time <- 52 * 65 + 1
+prep_start_prob <- rep(0.302, 3)
 
 param <- param_msm(
   netstats = netstats,
@@ -45,7 +46,7 @@ param <- param_msm(
   tt.part.supp = 1 - full_tx_eff,
   tt.full.supp = full_tx_eff,
   tt.dur.supp = rep(0, 3),
-  tx.halt.partial.prob = c(0.0065, 0.0053, 0.003),
+  tx.halt.partial.prob =  c(0.00580, 0.00475, 0.00280), # c(0.0065, 0.0053, 0.003),
   tx.halt.full.rr = rep(0.45, 3),
   tx.halt.durable.rr = rep(0.45, 3),
   tx.reinit.partial.prob = rep(0.00255, 3),
@@ -55,7 +56,7 @@ param <- param_msm(
   max.time.on.tx.part.int = 52 * 10,
   max.time.off.tx.part.int = 52 * 10,
   aids.mr = 1 / 250,
-  trans.scale =  c(3.16, 0.40, 0.30), #c(2.75, 0.4, 0.), #c(2.21, 0.405, 0.255),
+  trans.scale =  c(2.70, 0.37, 0.29), # c(3.16, 0.40, 0.30), #c(2.75, 0.4, 0.), #c(2.21, 0.405, 0.255),
   acts.scale = 1.00,
   acts.scale.main = 1.00,
   acts.scale.casl = 1.00,
@@ -69,10 +70,10 @@ param <- param_msm(
   riskh.start = prep_start_time - 52,
   prep.adhr.dist = c(0.089, 0.127, 0.784),
   prep.adhr.hr = c(0.69, 0.19, 0.01),
-  prep.start.prob =  rep(0.71, 3), # 0.00896,
+  prep.start.prob =  prep_start_prob,
 
   # qexp(1 - 0.57, 52) -> 0.0115036 (57% retention at year 1, 52 steps)
-  prep.discont.rate = rep(0.02138792, 3), # 1 - (2^(-1/(224.4237/7)))
+  prep.discont.rate = rep(0.0079, 3),
   ## prep.tst.int = 90/7,         # do I need that?
   prep.risk.int = 26,
   ## prep.sti.screen.int = 182/7,
@@ -157,7 +158,22 @@ param <- param_msm(
   part.tx.init.prob = rep(0.387, 3),
   part.tx.reinit.prob = rep(0, 3),
 
-  param_updaters = list(),
+  param_updaters = list(
+    # High PrEP intake for the first year
+    list(
+      at = prep_start_time,
+      param = list(
+        prep.start.prob = prep_start_prob * 2
+      )
+    ),
+    # go back to normal to get to 15%
+    list(
+      at = prep_start_time + 52,
+      param = list(
+        prep.start.prob =  prep_start_prob
+      )
+    )
+  ),
   epi_trackers = epi_trackers
 )
 

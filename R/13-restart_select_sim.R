@@ -1,11 +1,30 @@
 library(data.table)
+library(dplyr)
 
 # One or many job_names
-job_names <- c("CPN_restart_select")
+job_names <- c("CPN_restart")
 jobs <- list()
 
 # Read targets
 source("R/utils-targets.R")
+
+needed_trackers <- c(
+  "n", "i", "i_dx", "i_sup", "linked1m"
+)
+
+needed_pops <- c("ALL", "B", "H", "W")
+
+needed_trackers <- vapply(
+  needed_pops,
+  function(pop) paste0(needed_trackers, "___", pop),
+  needed_trackers
+)
+
+needed_cols <- c(
+  "sim", "time", "batch", "param_batch", "num",
+  "ir100.gc", "ir100.ct",
+  needed_trackers
+)
 
 for (job in job_names) {
   jobs[[job]] <- list()
@@ -20,59 +39,62 @@ for (job in job_names) {
     btch <- as.numeric(stringr::str_extract(fs::path_file(fle), "\\d+"))
     sim <- readRDS(fle)
     dff <- as.data.table(sim)
-    dff[, `:=`(batch = btch, param_batch = infos$unique_proposals[btch])]
+    dff[, `:=`(batch = btch)]
 
     ## Do caclucation here
-    dff <- dff[
-      time > max(time) - 52,
-      lapply(.SD, median, na.rm = T),
-      .SDcols = names(targets), by = c("batch", "sim")
-    ]
+    dff <- dff[ time > max(time) - 52 ]
 
-    df_ls[[btch]] <- dff
+    keep_cols <- intersect(needed_cols, names(dff))
+    df_ls[[btch]] <- dff[, ..keep_cols]
   }
   jobs[[job]]$data <- rbindlist(df_ls)
 }
 
-df <- jobs[[1]]$data
+df_b <- jobs[[1]]$data
 
-dt_norm <- df[
-  ,
-  Map(function(x, y) (x - y), .SD, targets),
-  by = c("batch", "sim"), .SDcols = names(targets)
-][,
-  score := sum(.SD / sd(.SD))^2,
-  by = c("batch", "sim"), .SDcols = names(targets)
-][order(score)]
+saveRDS(df_b, "out/restart_chooser.rds")
 
-# Best == batch301 sim14
-sim <- readRDS(fs::path("out/remote_jobs/", job, "out/sim301.rds"))
-orig <- EpiModel::get_sims(sim, 14)
+df <- df_b %>%
+  group_by(batch, sim) %>%
+  summarise(
+    ir100.gc = median(ir100.gc, na.rm = TRUE),
+    ir100.ct = median(ir100.ct, na.rm = TRUE),
+    i.prev.dx___B = median(i_dx___B / n___B, na.rm = TRUE),
+    cc.dx___B = median(i_dx___B / i___B, na.rm = TRUE),
+    cc.linked1m___B = median(linked1m___B / i_dx___B, na.rm = TRUE),
+    cc.vsupp___B = median(i_sup___B / i_dx___B, na.rm = TRUE),
+    i.prev.dx___H = median(i_dx___H / n___H, na.rm = TRUE),
+    cc.dx___H = median(i_dx___H / i___H, na.rm = TRUE),
+    cc.linked1m___H = median(linked1m___H / i_dx___H, na.rm = TRUE),
+    cc.vsupp___H = median(i_sup___H / i_dx___H, na.rm = TRUE),
+    i.prev.dx___W = median(i_dx___W / n___W, na.rm = TRUE),
+    cc.dx___W = median(i_dx___W / i___W, na.rm = TRUE),
+    cc.linked1m___W = median(linked1m___W / i_dx___W, na.rm = TRUE),
+    cc.vsupp___W = median(i_sup___W / i_dx___W, na.rm = TRUE)
+  ) %>%
+  mutate(
+    i.prev.dx___B = i.prev.dx___B - 0.33,
+    i.prev.dx___H = i.prev.dx___H - 0.127,
+    i.prev.dx___W = i.prev.dx___W - 0.084,
+    cc.dx___B = cc.dx___B - 0.804,
+    cc.dx___H = cc.dx___H - 0.799,
+    cc.dx___W = cc.dx___W - 0.88,
+    cc.linked1m___B = cc.linked1m___B - 0.62,
+    cc.linked1m___H = cc.linked1m___H - 0.65,
+    cc.linked1m___W = cc.linked1m___W - 0.76,
+    cc.vsupp___B = cc.vsupp___B - 0.55,
+    cc.vsupp___H = cc.vsupp___H - 0.60,
+    cc.vsupp___W = cc.vsupp___W - 0.72
+  )
+
+df_mat <- as.matrix(df[, 5:ncol(df)])
+min_ind <- which.min(rowSums(df_mat^2))
+as.list(df[min_ind, ]) # check STI values (not in calculation) gc:12.9, ct:15.1
+df[min_ind, 1:2]
+
+# Best == batch634 sim15
+sim <- readRDS(fs::path("out/remote_jobs/", job, "out/sim634.rds"))
+orig <- EpiModel::get_sims(sim, 15)
+orig$epi <- orig$epi["num"] # keep only the "num" epi tracker
+
 saveRDS(orig, "out/est/restart.rds")
-
-## Check
-#
-# library(ggplot2)
-# theme_set(theme_light())
-#
-# df <- as.data.table(orig)
-# print(names(df), max = 200)
-#
-# plot_evol <- function(df, col, targets) {
-#   tgt <- targets[col]
-#   ggplot(df, aes(x = time, y = get(col))) +
-#     ylab(col) +
-#     ylim(tgt * 0.8, tgt * 1.2) +
-#     geom_line() +
-#     geom_hline(yintercept = tgt)
-# }
-
-# df_t <- df[time > max(time) - 52, ]
-
-# for (n in names(targets)) {
-#   print(n)
-#   print(targets[n])
-#   print(plot_evol(df_t, n, targets))
-#   readline()
-# }
-
