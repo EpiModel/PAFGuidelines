@@ -10,7 +10,7 @@ df <- df_b
 
 df <- df_b %>%
   filter(time > max(time) - 10 * 52) %>%
-  group_by(batch, sim) %>%
+  group_by(param_batch) %>%
   summarise(
     ir100.gc = median(ir100.gc, na.rm = TRUE),
     ir100.ct = median(ir100.ct, na.rm = TRUE),
@@ -43,34 +43,20 @@ df <- df_b %>%
   )
 
 df %>%
-  ungroup() %>%
-  select(starts_with("cc.vsupp")) %>%
+  group_by(param_batch) %>%
+  select(starts_with("cc.linked1m")) %>%
   summarise(across(everything(), median))
-
-# ir100 STI
-df %>%
-  filter(time > max(time) - 10 * 52) %>%
-  group_by(param_batch) %>%
-  summarise(across(c(ir100.gc, ir100.ct), median)) %>%
-  print(n = 200)
-
-df %>%
-  filter(time > max(time) - 10 * 52) %>%
-  group_by(param_batch) %>%
-  summarise(
-    ir100.gc = median(incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200),
-    ir100.ct = median(incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200)
-  ) %>%
-  mutate(
-    ir100.gc = ir100.gc - 12.81,
-    ir100.ct = ir100.ct - 14.59
-  ) %>%
-  print(n = 200)
 
 param_proposals[c(17, 18)]
 
-#GC
-apply(param_proposals[c(17, 18)], \(x) x$ugc.tprob)
-#CT
-lapply(param_proposals[c(4, 9, 14, 19, 25)], \(x) x$uct.tprob)
+
+df %>%
+  ungroup() %>%
+  select(starts_with("cc.linked1m")) %>%
+  summarise(across(everything(), list(
+        q1 = ~ quantile(.x, prob = 0.25, na.rm = TRUE),
+        q2 = ~ quantile(.x, prob = 0.50, na.rm = TRUE),
+        q3 = ~ quantile(.x, prob = 0.75, na.rm = TRUE)
+  ))) %>%
+  as.list()
 

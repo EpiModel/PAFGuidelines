@@ -4,19 +4,21 @@ test_simulation <- TRUE
 test_all_combination <- TRUE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
-batch_per_set <- 20      # How many 28 replications to do per parameter
+n_cpus <- 40
+batch_per_set <- 7      # How many `n_cpus` replications to do per parameter
 steps_to_keep <- 52 * 10 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_try"
-ssh_host <- "hyak_mox"
+job_name <- "k_PAF_transcale"
+ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
+
 
 # Options passed to slurm_wf
 slurm_ressources <- list(
   partition = partition,
   job_name = job_name,
   account = if (partition == "csde") "csde" else "csde-ckpt",
-  n_cpus = 28,
+  n_cpus = n_cpus,
   memory = 5 * 1e3, # in Mb and PER CPU
   walltime = 60
 )
@@ -28,8 +30,8 @@ source("R/utils-params.R", local = TRUE)
 
 control <- control_msm(
   nsteps = 60 * 52,
-  nsims = 28,
-  ncores = 28,
+  nsims = n_cpus,
+  ncores = n_cpus,
   save.nwstats = FALSE,
   save.clin.hist = FALSE,
   verbose = FALSE
@@ -38,12 +40,11 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 
 param_proposals <- list(
-  uct.tprob = as.list(seq(0.21, 0.22, length.out = 5)),
-  ugc.tprob = as.list(seq(0.33, 0.34, length.out = 5))
+  trans.scale = seq_cross(c(2.69, 0.36, 0.28), c(2.71, 0.38, 0.30), 5, TRUE)
 )
 
 # Use this line to run only the default values
-param_proposals <- list(base_params__ = TRUE)
+# param_proposals <- list(base_params__ = TRUE)
 
 # Finalize param_proposal list
 if (test_all_combination) {
