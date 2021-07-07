@@ -44,7 +44,7 @@ df <- df_b %>%
 
 df %>%
   group_by(param_batch) %>%
-  select(starts_with("cc.linked1m")) %>%
+  select(starts_with("i.prev")) %>%
   summarise(across(everything(), median))
 
 param_proposals[c(17, 18)]
