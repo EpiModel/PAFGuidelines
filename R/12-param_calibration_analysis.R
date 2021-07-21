@@ -25,7 +25,12 @@ df <- df_b %>%
     i.prev.dx___W = median(i_dx___W / n___W, na.rm = TRUE),
     cc.dx___W = median(i_dx___W / i___W, na.rm = TRUE),
     cc.linked1m___W = median(linked1m___W / i_dx___W, na.rm = TRUE),
-    cc.vsupp___W = median(i_sup___W / i_dx___W, na.rm = TRUE)
+    cc.vsupp___W = median(i_sup___W / i_dx___W, na.rm = TRUE),
+    prep = median(
+      (s_prep___B + s_prep___H + s_prep___W) /
+      (s_prep_elig___B + s_prep_elig___H + s_prep_elig___W),
+      na.rm = TRUE
+    )
   ) %>%
   mutate(
     i.prev.dx___B = i.prev.dx___B - 0.33,
@@ -39,20 +44,35 @@ df <- df_b %>%
     cc.linked1m___W = cc.linked1m___W - 0.76,
     cc.vsupp___B = cc.vsupp___B - 0.55,
     cc.vsupp___H = cc.vsupp___H - 0.60,
-    cc.vsupp___W = cc.vsupp___W - 0.72
+    cc.vsupp___W = cc.vsupp___W - 0.72,
+    prep = prep - 0.15
   )
 
 df %>%
   group_by(param_batch) %>%
   select(starts_with("i.prev")) %>%
-  summarise(across(everything(), median))
+  summarise(across(everything(), median)) %>%
+  mutate(score = i.prev.dx___B^2 + i.prev.dx___H^2 + i.prev.dx___W^2) %>%
+  arrange(i.prev.dx___B) %>%
+  print(n = 200)
 
-param_proposals[c(17, 18)]
+df %>%
+  group_by(param_batch) %>%
+  select(starts_with("prep")) %>%
+  summarise(across(everything(), median)) %>%
+  print(n = 200)
 
+param_proposals[c(66, 41)]
 
 df %>%
   ungroup() %>%
-  select(starts_with("cc.linked1m")) %>%
+  select(starts_with("cc.vsupp")) %>%
+  summarise(across(everything(), median)) %>%
+  print(n = 200)
+
+df %>%
+  ungroup() %>%
+  select(starts_with("ir100")) %>%
   summarise(across(everything(), list(
         q1 = ~ quantile(.x, prob = 0.25, na.rm = TRUE),
         q2 = ~ quantile(.x, prob = 0.50, na.rm = TRUE),

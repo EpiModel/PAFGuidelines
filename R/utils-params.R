@@ -31,7 +31,7 @@ epistats <- readRDS("out/est/epistats.rds")
 
 full_tx_eff <- rep(1, 3)
 prep_start_time <- 52 * 65 + 1
-prep_start_prob <- rep(0.302, 3)
+prep_start_prob <- rep(0.31, 3)
 
 param <- param_msm(
   netstats = netstats,
@@ -56,7 +56,7 @@ param <- param_msm(
   max.time.on.tx.part.int = 52 * 10,
   max.time.off.tx.part.int = 52 * 10,
   aids.mr = 1 / 250,
-  trans.scale =  c(2.70, 0.37, 0.29), # c(3.16, 0.40, 0.30), #c(2.75, 0.4, 0.), #c(2.21, 0.405, 0.255),
+  trans.scale =  c(2.50, 0.3875, 0.275), # c(3.16, 0.40, 0.30), #c(2.75, 0.4, 0.), #c(2.21, 0.405, 0.255),
   acts.scale = 1.00,
   acts.scale.main = 1.00,
   acts.scale.casl = 1.00,
@@ -176,27 +176,6 @@ param <- param_msm(
   ),
   epi_trackers = epi_trackers
 )
-
-# Ensure that we do not truncate more than what is needed
-# param <- update_params(
-#   param, list(
-#     truncate.plist = max(
-#       param$part.ident.main.window,
-#       param$part.ident.casl.window,
-#       param$part.ident.ooff.window
-#     ) + 1
-#   )
-# )
-
-## must be set by the calling script
-if (lnt == FALSE) {
-  param <- update_params(
-    param, list(
-      prep.require.lnt = FALSE,
-      prep.start.prob = 0.00411
-    )
-  )
-}
 
 init <- init_msm(
   prev.ugc = 0.05,

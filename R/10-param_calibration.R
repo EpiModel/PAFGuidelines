@@ -8,7 +8,7 @@ n_cpus <- 40
 batch_per_set <- 7      # How many `n_cpus` replications to do per parameter
 steps_to_keep <- 52 * 10 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "k_PAF_transcale"
+job_name <- "k_PAF_prep"
 ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -29,7 +29,7 @@ lnt <- TRUE # if FALSE: set `require.lnt` to FALSE and adjust ` prep.start.prob`
 source("R/utils-params.R", local = TRUE)
 
 control <- control_msm(
-  nsteps = 60 * 52,
+  nsteps = 70 * 52,
   nsims = n_cpus,
   ncores = n_cpus,
   save.nwstats = FALSE,
@@ -40,11 +40,11 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 
 param_proposals <- list(
-  trans.scale = seq_cross(c(2.69, 0.36, 0.28), c(2.71, 0.38, 0.30), 5, TRUE)
+  # trans.scale = seq_cross(c(2.5, 0.35, 0.25), c(2.60, 0.40, 0.30), 5, TRUE)
 )
 
 # Use this line to run only the default values
-# param_proposals <- list(base_params__ = TRUE)
+param_proposals <- list(base_params__ = TRUE)
 
 # Finalize param_proposal list
 if (test_all_combination) {
