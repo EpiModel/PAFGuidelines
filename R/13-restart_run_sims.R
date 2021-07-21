@@ -7,9 +7,9 @@ test_all_combination <- FALSE # Can grow super fast
 batch_per_set <- 50      # How many 28 replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "CPN_restart_select"
+job_name <- "PAF_restart_test"
 ssh_host <- "hyak_mox"
-ssh_dir <- "gscratch/CombPrevNet/"
+ssh_dir <- "gscratch/PAFGuidelines/"
 
 # Options passed to slurm_wf
 slurm_ressources <- list(
