@@ -1,7 +1,8 @@
+library(EpiModel)
 library(data.table)
 
 # One or many job_names
-job_names <- "CPN_scenarios_all"
+job_names <- "PAF_restart_test"
 job_last_n <- 2 # if not NULL, get last N jobs. Otherwise, use job_names
 
 if (!is.null(job_last_n))

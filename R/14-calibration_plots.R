@@ -1,6 +1,6 @@
 library(tidyverse)
 
-files_folder <- "out/CPN_restart_select/out" # where are the calibration files
+files_folder <- "out/CPN_restart_test/out" # where are the calibration files
 reprocess <- TRUE # set to TRUE to redo the file processing
 
 # prepare targets

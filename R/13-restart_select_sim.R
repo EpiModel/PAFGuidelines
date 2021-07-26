@@ -1,8 +1,9 @@
+library(EpiModel)
 library(data.table)
 library(dplyr)
 
 # One or many job_names
-job_names <- c("CPN_restart")
+job_names <- c("PAF_restart_test")
 jobs <- list()
 
 # Read targets
@@ -87,14 +88,16 @@ df <- df_b %>%
     cc.vsupp___W = cc.vsupp___W - 0.72
   )
 
+summarise(ungroup(df), across(everything(), median)) %>% as.list()
+
 df_mat <- as.matrix(df[, 5:ncol(df)])
 min_ind <- which.min(rowSums(df_mat^2))
 as.list(df[min_ind, ]) # check STI values (not in calculation) gc:12.9, ct:15.1
 df[min_ind, 1:2]
 
-# Best == batch634 sim15
-sim <- readRDS(fs::path("out/remote_jobs/", job, "out/sim634.rds"))
-orig <- EpiModel::get_sims(sim, 15)
+# Best == batch15 sim18
+sim <- readRDS(fs::path("out/remote_jobs/", job, paste0("out/sim", df[min_ind, 2], ".rds")))
+orig <- EpiModel::get_sims(sim, df[min_ind, 2])
 orig$epi <- orig$epi["num"] # keep only the "num" epi tracker
 
 saveRDS(orig, "out/est/restart.rds")

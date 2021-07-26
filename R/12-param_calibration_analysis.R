@@ -45,6 +45,8 @@ df <- df_b %>%
     cc.vsupp___B = cc.vsupp___B - 0.55,
     cc.vsupp___H = cc.vsupp___H - 0.60,
     cc.vsupp___W = cc.vsupp___W - 0.72,
+    ir100.gc = ir100.gc - 12.81,
+    ir100.ct = ir100.ct - 14.59,
     prep = prep - 0.15
   )
 
