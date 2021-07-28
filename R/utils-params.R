@@ -23,6 +23,19 @@ ls_trackers <- list(
 )
 epi_trackers <- epi_tracker_by_race(ls_trackers, full = F, indiv = TRUE)
 
+ls_restart_trackers <- list(
+  n             = epi_n,
+  i             = epi_i,
+  i_dx          = epi_i_dx,
+  i_sup         = epi_i_sup,
+  linked1m      = epi_linked_time(4)
+)
+
+restart_trackers <- epi_tracker_by_race(
+  ls_restart_trackers,
+  full = FALSE,
+  indiv = TRUE
+)
 
 # Params and inits
 orig <- readRDS("out/est/netest.rds")
@@ -140,23 +153,8 @@ param <- param_msm(
   stianntest.gc.hivpos.coverage = 0.61,
   stianntest.ct.hivpos.coverage = 0.61,
 
-  # Part ident parameters (defaut is ATL Complete, but never starts here)
+  # Part ident parameters - No partner services in this model
   part.ident.start = Inf,
-  part.index.window = 0, # ALWAYS KEEP AT 0
-  part.index.degree = 1,
-  part.index.prob = 0.666,
-  part.ident.main.window = 52,
-  part.ident.casl.window = 52,
-  part.ident.ooff.window = 52,
-  # see "R/z-indent_prob_calib.R"
-  part.ident.main.prob = 0.2057143,
-  part.ident.casl.prob = 0.1440000,
-  part.ident.ooff.prob = 0.0240000,
-  # Part Serv Params
-  part.hiv.test.rate = rep(0.394, 3),
-  part.prep.start.prob = rep(0, 3),
-  part.tx.init.prob = rep(0.387, 3),
-  part.tx.reinit.prob = rep(0, 3),
 
   param_updaters = list(
     # High PrEP intake for the first year

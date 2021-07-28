@@ -1,7 +1,6 @@
 nsims <- ncores <- 1
-lnt <- TRUE
 source("R/utils-params.R")
-# pkgload::load_all("../EpiModelHIV-p/")
+pkgload::load_all("../EpiModelHIV-p/")
 # orig <- readRDS("out/est/restart.rds")
 
 ## Parameters
@@ -11,7 +10,7 @@ est <- readRDS("out/est/netest.rds")
 
 ncores <- 4
 control <- control_msm(
-  nsteps = 52 * 60,
+  nsteps = 52 * 10,
   nsims = ncores,
   ncores = ncores,
   verbose = FALSE

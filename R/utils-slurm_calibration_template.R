@@ -4,20 +4,20 @@ test_simulation <- TRUE
 test_all_combination <- FALSE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
-n_cpus <- 40
-batch_per_set <- 10      # How many 28 replications to do per parameter
+sim_per_batch <- 28    # How many simulation per bactch
+batch_per_set <- 3     # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "CPN_template"
+job_name <- "PAF_template"
 ssh_host <- "hyak_mox"
-ssh_dir <- "gscratch/CombPrevNet/"
+ssh_dir <- "gscratch/PAFGuidelines/"
 
 # Options passed to slurm_wf
 slurm_ressources <- list(
   partition = partition,
   job_name = job_name,
   account = if (partition == "csde") "csde" else "csde-ckpt",
-  n_cpus = n_cpus,
+  n_cpus = sim_per_batch,
   memory = 5 * 1e3, # in Mb and PER CPU
   walltime = 60
 )
@@ -29,8 +29,8 @@ source("R/utils-params.R", local = TRUE)
 
 control <- control_msm(
   nsteps = 65 * 52,
-  nsims = n_cpus,
-  ncores = n_cpus,
+  nsims = sim_per_batch,
+  ncores = sim_per_batch,
   save.nwstats = FALSE,
   save.clin.hist = FALSE,
   verbose = FALSE

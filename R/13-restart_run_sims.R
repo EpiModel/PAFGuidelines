@@ -25,6 +25,7 @@ slurm_ressources <- list(
 #
 lnt <- TRUE # if FALSE: set `require.lnt` to FALSE and adjust ` prep.start.prob`
 source("R/utils-params.R", local = TRUE)
+param$epi_trackers <- restart_trackers
 
 control <- control_msm(
   nsteps = 60 * 52,
@@ -71,12 +72,18 @@ info$param_proposals <- param_proposals
 
 slurm_wf_tmpl_dir("inst/slurm_wf/", info$root_dir, force = T)
 
-shared_res <- list(
-  partition = partition,
-  account = if (partition == "csde") "csde" else "csde-ckpt",
-  n_cpus = 28,
-  memory = 5 * 1e3 # in Mb and PER CPU
-)
+if (test_simulation) {
+  control_test <- control
+  control_test$nsteps <- 1 * 52
+  control_test$nsims <- 1
+  control_test$ncores <- 1
+  control_test$verbose <- TRUE
+
+  run_netsim_fun(
+    param_proposals[[1]], sim_nums[[1]],
+    orig, param, init, control_test, info
+  )
+}
 
 slurm_wf_Map(
   info$root_dir,
@@ -84,26 +91,9 @@ slurm_wf_Map(
   FUN = run_netsim_fun,
   sim_num = sim_nums,
   param_proposal = param_proposals,
-  MoreArgs = list(
-    orig = orig,
-    param = param,
-    init = init,
-    control = control,
-    info = info
-  )
+  MoreArgs = list(orig = orig, param = param, init = init, control = control,
+                  info = info)
 )
-
-if (test_simulation) {
-  control$nsteps <- 1 * 52
-  control$nsims <- 1
-  control$ncores <- 1
-  control$verbose <- TRUE
-
-  run_netsim_fun(
-    param_proposals[[1]], sim_nums[[1]],
-    orig, param, init, control, info
-  )
-}
 
 # Create out dir and save params
 fs::dir_create(fs::path(paths$local_out, paths$jobs_dir))
@@ -111,6 +101,7 @@ saveRDS(info, fs::path(paths$remote_job_dir, "job_info.rds"))
 # move slurm to out and cleanup
 fs::file_move(paths$remote_job_dir, fs::path(paths$local_out, paths$jobs_dir))
 fs::dir_delete(paths$jobs_dir)
+
 
 scp_send_script <- c(
   "#!/bin/sh",
@@ -133,4 +124,5 @@ scp_get_script <- c(
 writeLines(scp_send_script, fs::path(paths$local_job_dir, "send_to_ssh.sh"))
 writeLines(scp_get_script, fs::path(paths$local_job_dir, "get_from_ssh.sh"))
 
-write(job_name, file = fs::path(paths$local_out, paths$jobs_dir, "last_jobs"))
+write(job_name, file = fs::path(paths$local_out, paths$jobs_dir, "last_jobs"),
+      append = TRUE)
