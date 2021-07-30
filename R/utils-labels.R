@@ -1,72 +1,49 @@
 # Conversion between variable name and final label
 var_labels <- c(
   # Epi
-  "ir100"              = "Incidence Rate",
-  "nia"                = "NIA",
-  "pia"                = "PIA",
-  # Process
-  "prep_cov"           = "PrEP Coverage",
-  "hiv_diag"           = "HIV+ Diagnosed",
-  "hiv_tx"             = "HIV+ Treated",
-  "hiv_supp"           = "HIV+ Virally Suppressed",
-  "prep_start"         = "Total Number of individuals who Started PrEP",
-  # Part Process
-  "elig_indexes"       = "Number of Eligible Indexes",
-  "found_indexes"      = "Number of Indexes Found",
-  "prop_found_indexes" = "Proportion of Indexes Identified",
-  "part_ident"         = "Number of Identified Partners",
-  "part_screened"      = "Number of Screened Partners",
-  "part_sneg"          = "Number of Screened Partners (neg)",
-  "part_spos"          = "Number of Screened Partners (pos)",
-  "part_prep"          = "Number of Partners who Started PrEP",
-  "part_txinit"        = "Number of Partners who Started ART",
-  "part_txreinit"      = "Number of Partners who Restarted ART",
-  "ident_dist0"        = "Identified Distribution: 0",
-  "ident_dist1"        = "Identified Distribution: 1",
-  "ident_dist2"        = "Identified Distribution: 2",
-  "ident_dist3p"       = "Identified Distribution: 3+",
-
-  "prep_time_on"  = "prep_time_on",
-  "prep_episodes" = "prep_episodes"
+  "ir100"              = "HIV Incidence Rate",
+  "ir100_gc"           = "GC Incidence Rate",
+  "ir100_ct"           = "CT Incidence Rate",
+  "cum_incid"          = "HIV Cumulative incidence",
+  "cum_incid_gc"       = "GC Cumulative incidence",
+  "cum_incid_ct"       = "CT Cumulative incidence",
+  "nia"                = "HIV NIA",
+  "nia_gc"             = "GC NIA",
+  "nia_ct"             = "CT NIA",
+  "pia"                = "HIV PIA",
+  "pia_gc"             = "GC PIA",
+  "pia_ct"             = "CT PIA",
+  "nnt"                = "HIV NNT",
+  "nnt_gc"             = "GC NNT",
+  "nnt_ct"             = "CT NNT",
+  "nnt_hiv_sti"        = "HIV NNT - per STI test",
+  "test_hiv"           = "Number of HIV tests",
+  "test_hiv_pos"       = "Number of positive HIV tests",
+  "test_gc"            = "Number of GC tests",
+  "test_gc_pos"        = "Number of positive GC tests",
+  "test_ct"            = "Number of CT tests",
+  "test_ct_pos"        = "Number of positive CT tests",
+  "test_sti_u"         = "Number of Urethral tests",
+  "test_sti_u_pos"     = "Number of Positive Urethral tests",
+  "test_sti_r"         = "Number of Rectal tests",
+  "test_sti_r_pos"     = "Number of Positive Rectal tests",
+  "hiv_prev"           = "HIV Prevalence",
+  "gc_prev"            = "GC Prevalence",
+  "ct_prev"            = "CT Prevalence"
 )
-
-# Conversion between scenario name and final label
-scenarios_labels <- c(
-  "no_ident_no_prep"          = "Neither Partner Services or PrEP",
-  "no_ident"                  = "No Partner Services",
-  "base_atlanta_complete"     = "Atlanta Complete",
-  "base_atlanta_missing"      = "Atlanta Missing",
-  "base_atlanta_complete_alt" = "Atlanta Complete Alt",
-  "ident_max"                 = "All Max",
-  "ident_max_test"            = "Max ID + Test",
-  "ident_max_prep"            = "Max ID + Test + PrEP",
-  "ident_max_tx"              = "Max ID + Test + Tx",
-  "test_100"                  = "ATL ID & Max Test",
-  "prep_100"                  = "ATL ID & Max PrEP",
-  "test_prep_100"             = "ATL ID & Max Test + PrEP",
-  "tx_100"                    = "ATL ID & Max Tx",
-  "ident_x2"                  = "ALT ID x2",
-  "ident_x2_test_100"         = "ATL ID x2 & Max Test",
-  "ident_x2_prep_100"         = "ATL ID x2 & Max PrEP",
-  "ident_x2_test_prep_100"    = "ATL ID x2 & Max Test + PrEP",
-  "ident_x2_tx_100"           = "ATL ID x2 & Max Tx"
-)
-
 
 # Formatters for the variables
 fmts <- replicate(length(var_labels), scales::label_number(1))
 names(fmts) <- names(var_labels)
 fmts[["ir100"]] <- scales::label_number(0.01)
+fmts[["ir100_gc"]] <- scales::label_number(0.01)
+fmts[["ir100_ct"]] <- scales::label_number(0.01)
 fmts[["pia"]] <- scales::label_percent(0.1)
-fmts[["prep_cov"]] <- scales::label_percent(0.1)
-fmts[["hiv_diag"]] <- scales::label_percent(0.1)
-fmts[["hiv_tx"]] <- scales::label_percent(0.1)
-fmts[["hiv_supp"]] <- scales::label_percent(0.1)
-fmts[["ident_dist0"]] <- scales::label_percent(1)
-fmts[["ident_dist1"]] <- scales::label_percent(0.001)
-fmts[["ident_dist2"]] <- scales::label_percent(0.001)
-fmts[["ident_dist3p"]] <- scales::label_percent(0.001)
-fmts[["prop_found_indexes"]] <- scales::label_percent(0.1)
+fmts[["pia_gc"]] <- scales::label_percent(0.1)
+fmts[["pia_ct"]] <- scales::label_percent(0.1)
+fmts[["hiv_prev"]] <- scales::label_percent(0.1)
+fmts[["gc_prev"]] <- scales::label_percent(0.1)
+fmts[["ct_prev"]] <- scales::label_percent(0.1)
 
 
 make_ordered_labels <- function(nms, named_labels) {

@@ -6,7 +6,7 @@ test_simulation <- TRUE
 sim_per_batch <- 40    # How many simulation per bactch
 batch_per_set <- 13     # How many sim_per_batch replications to do per parameter
 steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
-partition <- "csde"     # On hyak, either ckpt or csde
+partition <- "ckpt"     # On hyak, either ckpt or csde
 job_name <- "k-PAF_sc"
 ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
@@ -87,9 +87,10 @@ if (test_simulation) {
 slurm_wf_Map(
   info$root_dir,
   resources = slurm_ressources,
-  FUN = run_netsim_fun,
+  FUN = run_netsim_updaters_fun,
   sim_num = sim_nums,
-  param_proposal = param_proposals,
+  updaters = param_proposals,
+  scenario = names(param_proposals),
   MoreArgs = list(orig = orig, param = param, init = init, control = control,
                   info = info)
 )

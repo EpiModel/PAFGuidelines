@@ -40,3 +40,8 @@ df %>%
   ggplot(aes(x = time / 52, y = ir100_ct)) +
     # geom_vline(xintercept = 65) +
     geom_smooth()
+
+d <- read.csv("in/scenarios.csv")
+
+vals <- replicate(10, c(0, 1), simplify = F)
+purrr::cross_df(vals)
