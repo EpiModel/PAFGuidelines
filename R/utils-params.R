@@ -14,14 +14,19 @@ ls_trackers <- list(
   i_sup         = epi_i_sup,
   # i_sup_dur     = epi_i_sup_dur,
   linked1m      = epi_linked_time(4),
-  gc_i          = epi_gc_i,
-  ct_i          = epi_ct_i,
-  gc_s          = epi_gc_s,
-  ct_s          = epi_ct_s,
+  gc_i_hivpos   = epi_gc_i(1),
+  ct_i_hivpos   = epi_ct_i(1),
+  gc_s_hivpos   = epi_gc_s(1),
+  ct_s_hivpos   = epi_ct_s(1),
+  gc_i_hivneg   = epi_gc_i(0),
+  ct_i_hivneg   = epi_ct_i(0),
+  gc_s_hivneg   = epi_gc_s(0),
+  ct_s_hivneg   = epi_ct_s(0),
   prep_start    = epi_prep_start,
   prep_time_on  = epi_prep_time_on
 )
-epi_trackers <- epi_tracker_by_race(ls_trackers, full = F, indiv = TRUE)
+
+epi_trackers <- epi_tracker_by_race(ls_trackers, full = TRUE, indiv = FALSE)
 
 ls_restart_trackers <- list(
   n             = epi_n,

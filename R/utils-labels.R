@@ -29,21 +29,29 @@ var_labels <- c(
   "test_sti_r_pos"     = "Number of Positive Rectal tests",
   "hiv_prev"           = "HIV Prevalence",
   "gc_prev"            = "GC Prevalence",
-  "ct_prev"            = "CT Prevalence"
+  "ct_prev"            = "CT Prevalence",
+  "prep_cov"           = "PrEP Coverage",
+  "hiv_diag"           = "HIV+ Diagnosed",
+  "hiv_tx"             = "HIV+ Treated | Diagnosed",
+  "hiv_supp"           = "HIV+ Virally Suppressed | Diagnosed"
 )
 
 # Formatters for the variables
 fmts <- replicate(length(var_labels), scales::label_number(1))
 names(fmts) <- names(var_labels)
-fmts[["ir100"]] <- scales::label_number(0.01)
+fmts[["ir100"]]    <- scales::label_number(0.01)
 fmts[["ir100_gc"]] <- scales::label_number(0.01)
 fmts[["ir100_ct"]] <- scales::label_number(0.01)
-fmts[["pia"]] <- scales::label_percent(0.1)
-fmts[["pia_gc"]] <- scales::label_percent(0.1)
-fmts[["pia_ct"]] <- scales::label_percent(0.1)
+fmts[["pia"]]      <- scales::label_percent(0.1)
+fmts[["pia_gc"]]   <- scales::label_percent(0.1)
+fmts[["pia_ct"]]   <- scales::label_percent(0.1)
 fmts[["hiv_prev"]] <- scales::label_percent(0.1)
-fmts[["gc_prev"]] <- scales::label_percent(0.1)
-fmts[["ct_prev"]] <- scales::label_percent(0.1)
+fmts[["gc_prev"]]  <- scales::label_percent(0.1)
+fmts[["ct_prev"]]  <- scales::label_percent(0.1)
+fmts[["prep_cov"]] <- scales::label_percent(0.1)
+fmts[["hiv_diag"]] <- scales::label_percent(0.1)
+fmts[["hiv_tx"]]   <- scales::label_percent(0.1)
+fmts[["hiv_supp"]] <- scales::label_percent(0.1)
 
 
 make_ordered_labels <- function(nms, named_labels) {
