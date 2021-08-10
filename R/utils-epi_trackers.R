@@ -128,14 +128,14 @@ epi_linked_time <- function(weeks) {
 }
 
 # STI trackers
-epi_gc_i <- function(diag_status) {
+epi_gc_i <- function(hiv_status) {
   function(r_ind) {
     function(dat, at) {
-      needed_attributes <- c("race", "rGC", "uGC", "diag.status")
+      needed_attributes <- c("race", "rGC", "uGC", "status")
       with(get_attr_list(dat, needed_attributes), {
         sum(
           race %in% r_ind &
-          diag.status %in% diag_status &
+          status %in% hiv_status &
           (rGC == 1 | uGC == 1),
           na.rm = TRUE
         )
@@ -144,14 +144,14 @@ epi_gc_i <- function(diag_status) {
   }
 }
 
-epi_ct_i <- function(diag_status) {
+epi_ct_i <- function(hiv_status) {
   function(r_ind) {
     function(dat, at) {
-      needed_attributes <- c("race", "rCT", "uCT", "diag.status")
+      needed_attributes <- c("race", "rCT", "uCT", "status")
       with(get_attr_list(dat, needed_attributes), {
         sum(
           race %in% r_ind &
-          diag.status %in% diag_status &
+          status %in% hiv_status &
           (rCT == 1 | uCT == 1),
           na.rm = TRUE
         )
@@ -160,14 +160,14 @@ epi_ct_i <- function(diag_status) {
   }
 }
 
-epi_gc_s <- function(diag_status) {
+epi_gc_s <- function(hiv_status) {
   function(r_ind) {
     function(dat, at) {
-      needed_attributes <- c("race", "rGC", "uGC", "diag.status")
+      needed_attributes <- c("race", "rGC", "uGC", "status")
       with(get_attr_list(dat, needed_attributes), {
         sum(
           race %in% r_ind &
-          diag.status %in% diag_status &
+          status %in% hiv_status &
           (rGC == 0 & uGC == 0),
           na.rm = TRUE
         )
@@ -176,14 +176,14 @@ epi_gc_s <- function(diag_status) {
   }
 }
 
-epi_ct_s <- function(diag_status) {
+epi_ct_s <- function(hiv_status) {
   function(r_ind) {
     function(dat, at) {
-      needed_attributes <- c("race", "rCT", "uCT", "diag.status")
+      needed_attributes <- c("race", "rCT", "uCT", "status")
       with(get_attr_list(dat, needed_attributes), {
         sum(
           race %in% r_ind &
-          diag.status %in% diag_status &
+          status %in% hiv_status &
           (rCT == 0 & uCT == 0),
           na.rm = TRUE
         )

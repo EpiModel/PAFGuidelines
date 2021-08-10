@@ -29,11 +29,11 @@ ls_trackers <- list(
 epi_trackers <- epi_tracker_by_race(ls_trackers, full = TRUE, indiv = FALSE)
 
 ls_restart_trackers <- list(
-  n             = epi_n,
-  i             = epi_i,
-  i_dx          = epi_i_dx,
-  i_sup         = epi_i_sup,
-  linked1m      = epi_linked_time(4)
+  n        = epi_n,
+  i        = epi_i,
+  i_dx     = epi_i_dx,
+  i_sup    = epi_i_sup,
+  linked1m = epi_linked_time(4)
 )
 
 restart_trackers <- epi_tracker_by_race(

@@ -159,21 +159,21 @@ make_outcomes <- function(baseline_file, scenarios_files,
           hiv_supp = mean(i_sup___ALL / i_dx___ALL, na.rm = TRUE),
           prep_cov = mean(s_prep___ALL / s_prep_elig___ALL, na.rm = TRUE),
 
-          ir100_gc_hivpos = mean(incid.gc.hivpos / s_gc_hivpos___ALL * 5200, na.rm = TRUE),
-          ir100_gc_hivneg = mean(incid.gc.hivneg / s_gc_hivneg___ALL * 5200, na.rm = TRUE),
-          ir100_gc = mean(ir100.gc, na.rm = TRUE),
+          ir100_gc_hivpos = mean(incid.gc.hivpos / gc_s_hivpos___ALL * 5200, na.rm = TRUE),
+          ir100_gc_hivneg = mean(incid.gc.hivneg / gc_s_hivneg___ALL * 5200, na.rm = TRUE),
+          ir100_gc = ir100_gc_hivpos + ir100_gc_hivneg,
 
-          ir100_ct_hivpos = mean(incid.ct.hivpos / s_ct_hivpos___ALL * 5200, na.rm = TRUE),
-          ir100_ct_hivneg = mean(incid.ct.hivneg / s_ct_hivneg___ALL * 5200, na.rm = TRUE),
-          ir100_ct = mean(ir100.ct, na.rm = TRUE),
+          ir100_ct_hivpos = mean(incid.ct.hivpos / ct_s_hivpos___ALL * 5200, na.rm = TRUE),
+          ir100_ct_hivneg = mean(incid.ct.hivneg / ct_s_hivneg___ALL * 5200, na.rm = TRUE),
+          ir100_ct = ir100_ct_hivpos + ir100_ct_hivneg,
 
           gc_prev_hivpos = mean(gc_i_hivpos___ALL / (gc_i_hivpos___ALL + gc_s_hivpos___ALL), na.rm = TRUE),
           gc_prev_hivneg = mean(gc_i_hivneg___ALL / (gc_i_hivneg___ALL + gc_s_hivneg___ALL), na.rm = TRUE),
-          gc_prev = mean(gc_i___ALL / (gc_i___ALL + gc_s___ALL), na.rm = TRUE),
+          gc_prev = gc_prev_hivpos + gc_prev_hivneg,
 
           ct_prev_hivpos = mean(ct_i_hivpos___ALL / (ct_i_hivpos___ALL + ct_s_hivpos___ALL), na.rm = TRUE),
           ct_prev_hivneg = mean(ct_i_hivneg___ALL / (ct_i_hivneg___ALL + ct_s_hivneg___ALL), na.rm = TRUE),
-          ct_prev = mean(ct_i___ALL / (ct_i___ALL + ct_s___ALL), na.rm = TRUE)
+          ct_prev = ct_prev_hivpos + ct_prev_hivneg
         ) %>%
         ungroup()
 

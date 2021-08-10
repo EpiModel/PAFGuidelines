@@ -4,7 +4,7 @@ test_simulation <- TRUE
 
 # Set slurm parameters ---------------------------------------------------------
 sim_per_batch <- 40    # How many simulation per bactch
-batch_per_set <- 13     # How many sim_per_batch replications to do per parameter
+batch_per_set <- 3#13     # How many sim_per_batch replications to do per parameter
 steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
 job_name <- "k-PAF_sc"
