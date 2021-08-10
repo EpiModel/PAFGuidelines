@@ -17,3 +17,16 @@ for (i in seq_len(n_scenarios)) {
 
   scenarios[[i]] <- list(sc)
 }
+
+scenarios_no_sti_effect <- scenarios
+
+for (i in seq_len(n_scenarios)) {
+  scenarios_no_sti_effect[[i]][[1]][["param"]][["hiv.rgc.rr"]] <- 1
+  scenarios_no_sti_effect[[i]][[1]][["param"]][["hiv.ugc.rr"]] <- 1
+  scenarios_no_sti_effect[[i]][[1]][["param"]][["hiv.rct.rr"]] <- 1
+  scenarios_no_sti_effect[[i]][[1]][["param"]][["hiv.uct.rr"]] <- 1
+}
+
+names(scenarios_no_sti_effect) <- paste0(
+  names(scenarios_no_sti_effect), "___no_sti_effect"
+)
