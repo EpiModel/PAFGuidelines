@@ -38,3 +38,19 @@ df$batch <- 1
 df$scenario <- "test"
 df_baseline <- df
 df_sc <- df
+
+
+# do after df table
+lst <- df_res %>%
+    sum_quants(ql, qm, qh) %>%
+    pivot_longer(-scenario) %>%
+    separate(name, into = c("name", "quantile"), sep = "_/_") %>%
+    pivot_wider(names_from = quantile, values_from = value) %>%
+    pull(name) %>%
+    unique()
+
+for (ll in lst) {
+  if (is.null(fmts[[ll]]) ) {
+    print(ll)
+  }
+}

@@ -47,7 +47,22 @@ make_outcomes <- function(baseline_file, scenarios_files,
     df_ls <- vector(mode = "list", length(scenarios_files))
     df_cur <- 0
     for (fle in scenarios_files) {
+      fle_nst <- paste0(stringr::str_sub(fle, 1, -5), "___no_sti_effect.rds")
+
       df_sc <- readRDS(fle)
+      df_nst <- readRDS(fle_nst)
+      df_nst <- df_nst %>%
+        filter(time >= max(time) - 52 * 10) %>%
+        group_by(batch, sim) %>%
+        summarise(
+          cum_incid           = sum(incid, na.rm = TRUE),
+          cum_incid_gc_hivpos = sum(incid.gc.hivpos, na.rm = TRUE),
+          cum_incid_gc_hivneg = sum(incid.gc.hivneg, na.rm = TRUE),
+          cum_incid_ct_hivpos = sum(incid.ct.hivpos, na.rm = TRUE),
+          cum_incid_ct_hivneg = sum(incid.ct.hivneg, na.rm = TRUE)
+        ) %>%
+        ungroup() %>%
+        summarise(across(-c(batch, sim), median))
 
       df_cur <- df_cur + 1
 
@@ -65,27 +80,30 @@ make_outcomes <- function(baseline_file, scenarios_files,
           test_hiv            = sum(tot.tests, na.rm = TRUE),
           test_hiv_pos        = sum(tot.tests - tot.neg.tests, na.rm = TRUE),
 
-          test_ugc_hivpos     = sum(uGC.tot.test.hivpos, na.rm = TRUE),
-          test_rgc_hivpos     = sum(rGC.tot.test.hivpos, na.rm = TRUE),
-          test_ugc_pos_hivpos = sum(uGC.pos.test.hivpos, na.rm = TRUE),
-          test_rgc_pos_hivpos = sum(rGC.pos.test.hivpos, na.rm = TRUE),
+          test_ugc_hivpos     = sum(ugc.tot.test.hivpos, na.rm = TRUE),
+          test_rgc_hivpos     = sum(rgc.tot.test.hivpos, na.rm = TRUE),
+          test_ugc_pos_hivpos = sum(ugc.pos.test.hivpos, na.rm = TRUE),
+          test_rgc_pos_hivpos = sum(rgc.pos.test.hivpos, na.rm = TRUE),
 
-          test_ugc_hivneg     = sum(uGC.tot.test.hivneg, na.rm = TRUE),
-          test_rgc_hivneg     = sum(rGC.tot.test.hivneg, na.rm = TRUE),
-          test_ugc_pos_hivneg = sum(uGC.pos.test.hivneg, na.rm = TRUE),
-          test_rgc_pos_hivneg = sum(rGC.pos.test.hivneg, na.rm = TRUE),
+          test_ugc_hivneg     = sum(ugc.tot.test.hivneg, na.rm = TRUE),
+          test_rgc_hivneg     = sum(rgc.tot.test.hivneg, na.rm = TRUE),
+          test_ugc_pos_hivneg = sum(ugc.pos.test.hivneg, na.rm = TRUE),
+          test_rgc_pos_hivneg = sum(rgc.pos.test.hivneg, na.rm = TRUE),
 
-          test_uct_hivpos     = sum(uCT.tot.test.hivpos, na.rm = TRUE),
-          test_rct_hivpos     = sum(rCT.tot.test.hivpos, na.rm = TRUE),
-          test_uct_pos_hivpos = sum(uCT.pos.test.hivpos, na.rm = TRUE),
-          test_rct_pos_hivpos = sum(rCT.pos.test.hivpos, na.rm = TRUE),
+          test_uct_hivpos     = sum(uct.tot.test.hivpos, na.rm = TRUE),
+          test_rct_hivpos     = sum(rct.tot.test.hivpos, na.rm = TRUE),
+          test_uct_pos_hivpos = sum(uct.pos.test.hivpos, na.rm = TRUE),
+          test_rct_pos_hivpos = sum(rct.pos.test.hivpos, na.rm = TRUE),
 
-          test_uct_hivneg     = sum(uCT.tot.test.hivneg, na.rm = TRUE),
-          test_rct_hivneg     = sum(rCT.tot.test.hivneg, na.rm = TRUE),
-          test_uct_pos_hivneg = sum(uCT.pos.test.hivneg, na.rm = TRUE),
-          test_rct_pos_hivneg = sum(rCT.pos.test.hivneg, na.rm = TRUE)
+          test_uct_hivneg     = sum(uct.tot.test.hivneg, na.rm = TRUE),
+          test_rct_hivneg     = sum(rct.tot.test.hivneg, na.rm = TRUE),
+          test_uct_pos_hivneg = sum(uct.pos.test.hivneg, na.rm = TRUE),
+          test_rct_pos_hivneg = sum(rct.pos.test.hivneg, na.rm = TRUE)
         ) %>%
         mutate(
+          cum_incid_sti = cum_incid_gc_hivpos + cum_incid_gc_hivneg +
+                          cum_incid_ct_hivpos + cum_incid_ct_hivneg,
+
           test_gc_hivpos     = test_ugc_hivpos + test_rgc_hivpos,
           test_gc_pos_hivpos = test_ugc_pos_hivpos + test_rgc_pos_hivpos,
           test_gc_hivneg     = test_ugc_hivneg + test_rgc_hivneg,
@@ -143,7 +161,15 @@ make_outcomes <- function(baseline_file, scenarios_files,
           nnt_ct = (test_ct_hivpos + test_ct_hivneg) / nia_ct,
 
           nnt_hiv_sti = ((test_ct_hivpos + test_ct_hivneg) +
-                        (test_gc_hivpos + test_gc_hivneg)) / nia
+                        (test_gc_hivpos + test_gc_hivneg)) / nia,
+
+          cum_incid_diff           =  cum_incid - df_nst[["cum_incid"]][1],
+          cum_incid_gc_hivpos_diff =  cum_incid_gc_hivpos - df_nst[["cum_incid_gc_hivpos"]][1],
+          cum_incid_gc_hivneg_diff =  cum_incid_gc_hivneg - df_nst[["cum_incid_gc_hivneg"]][1],
+          cum_incid_ct_hivpos_diff =  cum_incid_ct_hivpos - df_nst[["cum_incid_ct_hivpos"]][1],
+          cum_incid_ct_hivneg_diff =  cum_incid_ct_hivneg - df_nst[["cum_incid_ct_hivneg"]][1],
+
+          attributable_per_sti = cum_incid_diff / cum_incid_sti
         ) %>%
         ungroup()
 

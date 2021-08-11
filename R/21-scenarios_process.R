@@ -1,10 +1,9 @@
 library(data.table)
 
-reprocess_all <- FALSE
+reprocess_all <- TRUE
 
 # One or many job_names
-# job_names <- "CPN_sc_t5_base"
-job_names <- "k-PAF_sc"
+job_names <- c("k-PAF_sc", "k-PAF_sc_no_sti")
 job_last_n <- NULL # if not NULL, get last N jobs. Otherwise, use job_names
 
 if (!is.null(job_last_n))
@@ -15,7 +14,8 @@ needed_trackers <- c(
   "n",
   "i", "i_dx", "i_tx", "i_sup", "linked1m",
   "s", "s_prep", "s_prep_elig",
-  "gc_i", "gc_s", "ct_i", "ct_s"
+  "gc_i_hivneg", "gc_s_hivneg", "ct_i_hivneg", "ct_s_hivneg",
+  "gc_i_hivpos", "gc_s_hivpos", "ct_i_hivpos", "ct_s_hivpos"
 )
 
 needed_pops <- c("ALL", "B", "H", "W")
@@ -29,12 +29,16 @@ needed_trackers <- vapply(
 needed_cols <- c(
   "sim", "time", "batch", "param_batch", "num",
   "incid", "incid.gc", "incid.ct",
+  "incid.gc.hivpos", "incid.gc.hivneg", "incid.ct.hivpos", "incid.ct.hivneg",
   "ir100.gc", "ir100.ct",
   "tot.tests", "tot.neg.tests",
-  "uGC.tot.test", "uCT.tot.test",
-  "uGC.tot.pos.test", "uCT.tot.pos.test",
-  "rGC.tot.test", "rCT.tot.test",
-  "rGC.tot.pos.test", "rCT.tot.pos.test",
+  "sti.screening.ep.hivneg", "sti.screening.ep.hivpos",
+  "rgc.tot.test.hivpos", "rgc.tot.test.hivneg", "ugc.tot.test.hivpos",
+  "ugc.tot.test.hivneg", "rgc.pos.test.hivpos", "rgc.pos.test.hivneg",
+  "ugc.pos.test.hivpos", "ugc.pos.test.hivneg", "rct.tot.test.hivpos",
+  "rct.tot.test.hivneg", "uct.tot.test.hivpos", "uct.tot.test.hivneg",
+  "rct.pos.test.hivpos", "rct.pos.test.hivneg", "uct.pos.test.hivpos",
+  "uct.pos.test.hivneg",
   needed_trackers
 )
 

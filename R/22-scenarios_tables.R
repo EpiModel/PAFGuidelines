@@ -36,4 +36,3 @@ d_raw <- make_outcomes(scenarios_files[1], scenarios_files, scenarios)
 d_table <- make_table(d_raw)
 saveRDS(d_raw, "out/tables_data/t3.rds")
 readr::write_csv(d_table, "out/tables/t3.csv")
-
