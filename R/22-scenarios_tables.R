@@ -2,11 +2,13 @@ source("R/utils-params.R", local = TRUE)
 source("R/utils-scenarios.R")
 source("R/utils-create_outcomes.R")
 
-if (!fs::dir_exists("out/tables"))
+if (!fs::dir_exists("out/tables")) {
   fs::dir_create("out/tables")
+}
 
-if (!fs::dir_exists("out/tables_data"))
+if (!fs::dir_exists("out/tables_data")) {
   fs::dir_create("out/tables_data")
+}
 
 scenarios_names <- names(scenarios)
 

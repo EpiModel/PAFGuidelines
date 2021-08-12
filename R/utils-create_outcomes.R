@@ -101,8 +101,12 @@ make_outcomes <- function(baseline_file, scenarios_files,
           test_rct_pos_hivneg = sum(rct.pos.test.hivneg, na.rm = TRUE)
         ) %>%
         mutate(
-          cum_incid_sti = cum_incid_gc_hivpos + cum_incid_gc_hivneg +
-                          cum_incid_ct_hivpos + cum_incid_ct_hivneg,
+          cum_incid_gc  = cum_incid_gc_hivpos + cum_incid_gc_hivneg,
+          cum_incid_ct  = cum_incid_ct_hivpos + cum_incid_ct_hivneg,
+
+          cum_incid_sti_hivpos = cum_incid_gc_hivpos + cum_incid_ct_hivpos,
+          cum_incid_sti_hivneg = cum_incid_gc_hivneg + cum_incid_ct_hivneg,
+          cum_incid_sti        = cum_incid_sti_hivpos + cum_incid_sti_hivpos,
 
           test_gc_hivpos     = test_ugc_hivpos + test_rgc_hivpos,
           test_gc_pos_hivpos = test_ugc_pos_hivpos + test_rgc_pos_hivpos,
@@ -118,19 +122,29 @@ make_outcomes <- function(baseline_file, scenarios_files,
           test_ct            = test_ct_hivpos + test_ct_hivneg,
           test_ct_pos        = test_ct_pos_hivpos + test_ct_pos_hivneg,
 
-          test_sti_u_hivpos     = test_ugc_hivpos + test_uct_hivpos,
-          test_sti_u_hivneg     = test_ugc_hivneg + test_uct_hivneg,
-          test_sti_u            = test_sti_u_hivpos + test_sti_u_hivneg,
-          test_sti_u_pos_hivpos = test_ugc_pos_hivpos + test_uct_pos_hivpos,
-          test_sti_u_pos_hivneg = test_ugc_pos_hivneg + test_uct_pos_hivneg,
-          test_sti_u_pos        = test_sti_u_pos_hivpos + test_sti_u_pos_hivneg,
+          test_usti_hivpos     = test_ugc_hivpos + test_uct_hivpos,
+          test_usti_hivneg     = test_ugc_hivneg + test_uct_hivneg,
+          test_usti            = test_usti_hivpos + test_usti_hivneg,
 
-          test_sti_r_hivpos     = test_rgc_hivpos + test_rct_hivpos,
-          test_sti_r_hivneg     = test_rgc_hivneg + test_rct_hivneg,
-          test_sti_r            = test_sti_r_hivpos + test_sti_r_hivneg,
-          test_sti_r_pos_hivpos = test_rgc_pos_hivpos + test_rct_pos_hivpos,
-          test_sti_r_pos_hivneg = test_rgc_pos_hivneg + test_rct_pos_hivneg,
-          test_sti_r_pos        = test_sti_r_pos_hivpos + test_sti_r_pos_hivneg,
+          test_usti_pos_hivpos = test_ugc_pos_hivpos + test_uct_pos_hivpos,
+          test_usti_pos_hivneg = test_ugc_pos_hivneg + test_uct_pos_hivneg,
+          test_usti_pos        = test_usti_pos_hivpos + test_usti_pos_hivneg,
+
+          test_rsti_hivpos     = test_rgc_hivpos + test_rct_hivpos,
+          test_rsti_hivneg     = test_rgc_hivneg + test_rct_hivneg,
+          test_rsti            = test_rsti_hivpos + test_rsti_hivneg,
+
+          test_rsti_pos_hivpos = test_rgc_pos_hivpos + test_rct_pos_hivpos,
+          test_rsti_pos_hivneg = test_rgc_pos_hivneg + test_rct_pos_hivneg,
+          test_rsti_pos        = test_rsti_pos_hivpos + test_rsti_pos_hivneg,
+
+          test_sti_hivpos      = test_rsti_hivpos + test_usti_hivpos,
+          test_sti_hivneg      = test_rsti_hivneg + test_usti_hivneg,
+          test_sti             = test_sti_hivneg + test_sti_hivneg,
+
+          test_sti_pos_hivpos  = test_rsti_pos_hivpos + test_usti_pos_hivpos,
+          test_sti_pos_hivneg  = test_rsti_pos_hivneg + test_usti_pos_hivneg,
+          test_sti_pos         = test_sti_pos_hivneg + test_sti_pos_hivneg,
 
           nia = (base_cum_incid - cum_incid),
           pia = nia / base_cum_incid,
@@ -225,6 +239,7 @@ make_table <- function(df_res, ql = 0.025, qm = 0.5, qh = 0.975) {
     pivot_longer(-scenario) %>%
     separate(name, into = c("name", "quantile"), sep = "_/_") %>%
     pivot_wider(names_from = quantile, values_from = value) %>%
+    filter(name %in% names(var_labels)) %>%
     mutate(
       clean_val = purrr::pmap_chr(
         list(name, l, m, h),

@@ -39,6 +39,7 @@ df$scenario <- "test"
 df_baseline <- df
 df_sc <- df
 
+df_res <- d_raw
 
 # do after df table
 lst <- df_res %>%
