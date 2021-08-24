@@ -47,7 +47,7 @@ var_labels <- c(
   "nnt_ct_hivpos"            = "CT NNT - HIV positive",
   "nnt_ct_hivneg"            = "CT NNT - HIV negative",
 
-  "attributable_per_sti"     = "Attributable HIV infection per STI",
+  "attributable_per_sti"     = "Attributable HIV infection per 1000 STI",
 
   "test_hiv"                 = "Number of HIV tests",
   "test_hiv_pos"             = "Number of HIV positive tests",
@@ -103,7 +103,11 @@ var_labels <- c(
   "cum_incid_gc_hivpos_diff" = "GC Cumulative incidence - HIV positive - Diff",
   "cum_incid_ct_hivpos_diff" = "CT Cumulative incidence - HIV positive - Diff",
   "cum_incid_gc_hivneg_diff" = "GC Cumulative incidence - HIV negative - Diff",
-  "cum_incid_ct_hivneg_diff" = "CT Cumulative incidence - HIV negative - Diff"
+  "cum_incid_ct_hivneg_diff" = "CT Cumulative incidence - HIV negative - Diff",
+
+  "perc_test_rsti"          = "Proportion of rectal tests",
+  "perc_test_sti_pos"       = "Proportion of positive tests",
+  "perc_test_sti_hivpos"    = "Proportion of HIV positive STI tests"
 )
 
 # Formatters for the variables
@@ -112,7 +116,7 @@ names(fmts) <- names(var_labels)
 
 format_patterns <- list(
   small_num = list(
-    patterns = "ir100",
+    patterns = c("ir100", "attributable_per_sti"),
     fun = scales::label_number(0.01)
   ),
   small_perc = list(
@@ -120,13 +124,13 @@ format_patterns <- list(
     fun = scales::label_percent(0.01)
   ),
   perc = list(
-    patterns = c("prev", "cov", "hiv_diag", "hiv_tx", "hiv_supp"),
+    patterns = c("prev", "cov", "hiv_diag", "hiv_tx", "hiv_supp", "perc"),
     fun = scales::label_percent(0.01)
   ),
-  scientific = list(
-    patterns = "attributable_per_sti",
-    fun = scales::label_scientific()
-  ),
+  # scientific = list(
+  #   patterns = "attributable_per_sti",
+  #   fun = scales::label_scientific()
+  # ),
   default = list(
     patterns = ".*",
     fun = scales::label_number(1)

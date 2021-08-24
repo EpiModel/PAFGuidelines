@@ -140,11 +140,11 @@ make_outcomes <- function(baseline_file, scenarios_files,
 
           test_sti_hivpos      = test_rsti_hivpos + test_usti_hivpos,
           test_sti_hivneg      = test_rsti_hivneg + test_usti_hivneg,
-          test_sti             = test_sti_hivneg + test_sti_hivneg,
+          test_sti             = test_sti_hivneg + test_sti_hivpos,
 
           test_sti_pos_hivpos  = test_rsti_pos_hivpos + test_usti_pos_hivpos,
           test_sti_pos_hivneg  = test_rsti_pos_hivneg + test_usti_pos_hivneg,
-          test_sti_pos         = test_sti_pos_hivneg + test_sti_pos_hivneg,
+          test_sti_pos         = test_sti_pos_hivneg + test_sti_pos_hivpos,
 
           nia = (base_cum_incid - cum_incid),
           pia = nia / base_cum_incid,
@@ -183,7 +183,10 @@ make_outcomes <- function(baseline_file, scenarios_files,
           cum_incid_ct_hivpos_diff =  cum_incid_ct_hivpos - df_nst[["cum_incid_ct_hivpos"]][1],
           cum_incid_ct_hivneg_diff =  cum_incid_ct_hivneg - df_nst[["cum_incid_ct_hivneg"]][1],
 
-          attributable_per_sti = cum_incid_diff / cum_incid_sti
+          attributable_per_sti = cum_incid_diff / cum_incid_sti * 1000,
+          perc_test_rsti = test_rsti / test_sti,
+          perc_test_sti_pos = test_sti_pos / test_sti,
+          perc_test_sti_hivpos = test_sti_hivpos / test_sti
         ) %>%
         ungroup()
 

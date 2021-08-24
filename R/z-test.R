@@ -40,6 +40,9 @@ df_baseline <- df
 df_sc <- df
 
 df_res <- d_raw
+ql <- 0.025
+qm <- 0.5
+qh <- 0.975
 
 # do after df table
 lst <- df_res %>%
