@@ -3,12 +3,12 @@ source("R/utils-slurm_wf.R")
 test_simulation <- TRUE
 
 # Set slurm parameters ---------------------------------------------------------
-sim_per_batch <- 28    # How many simulation per bactch
-batch_per_set <- 4     # How many sim_per_batch replications to do per parameter
+sim_per_batch <- 40    # How many simulation per bactch
+batch_per_set <- 14    # How many sim_per_batch replications to do per parameter
 steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_sc_all"
-ssh_host <- "hyak_mox"
+job_name <- "k-PAF_sc_nosti"
+ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
 # Options passed to slurm_wf
@@ -44,8 +44,9 @@ control <- control_msm(
 source("R/utils-scenarios.R")
 
 # To subset scenarios:
-scenarios <- c(scenarios, scenarios_no_sti_effect)
-# scenarios <- scenarios_no_sti_effect
+# scenarios <- scenarios
+scenarios <- scenarios_no_sti_effect
+# scenarios <- c(scenarios, scenarios_no_sti_effect)
 
 # Automatic --------------------------------------------------------------------
 #
