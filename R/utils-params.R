@@ -125,12 +125,16 @@ param <- param_msm(
   sti.cond.eff = 0.90, # default
   sti.cond.fail = c(0.2, 0.2, 0.2), # default
   # Calibrate these **NO**
+  # Increase ACQUISITION risk if HIV- & STI+
   hiv.rgc.rr = 2.78,
   hiv.ugc.rr = 1.73,
   hiv.rct.rr = 2.78,
   hiv.uct.rr = 1.73,
  # if both ct + gc -> log(RRgc) + 0.2 * log(RRct) | swap ct and gc if RRct > RRgc
   hiv.dual.rr = 0.2, # not mentionned in appendix
+  # Increase TRANSMISSION risk from a HIV+ & STI+
+  hiv.trans.gc.rr = 1.3,
+  hiv.trans.ct.rr = 1.3,
 
   truncate.plist = 52,
   ## PAFGuidelines specific params
