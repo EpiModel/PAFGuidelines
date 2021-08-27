@@ -399,3 +399,51 @@ make_yearly_outcomes <- function(scenarios_files, scenarios_order = NULL) {
 
   df_out
 }
+
+sum_yearly_quants <- function(df, ql = 0.025, qm = 0.5, qh = 0.975) {
+  df %>%
+    ungroup() %>%
+    select(-c(batch, sim)) %>%
+    group_by(scenario, year) %>%
+    summarise(across(
+      everything(),
+      list(
+        l = ~ quantile(.x, ql, na.rm = TRUE),
+        m = ~ quantile(.x, qm, na.rm = TRUE),
+        h = ~ quantile(.x, qh, na.rm = TRUE)
+      ),
+      .names = "{.col}_/_{.fn}"
+    )) %>%
+    ungroup()
+}
+
+make_yearly_table <- function(df_res, ql = 0.025, qm = 0.5, qh = 0.975) {
+  # this lines print the df with the variable in the right order
+  df_res <- df_res %>%
+    sum_yearly_quants(ql, qm, qh) %>%
+    pivot_longer(-c(scenario, year)) %>%
+    separate(name, into = c("name", "quantile"), sep = "_/_") %>%
+    pivot_wider(names_from = quantile, values_from = value) %>%
+    filter(name %in% names(var_labels)) %>%
+    mutate(
+      clean_val = purrr::pmap_chr(
+        list(name, l, m, h),
+        ~ paste0(
+          fmts[[..1]](..3), " (", fmts[[..1]](..2),
+          ", ", fmts[[..1]](..4), ")"
+        )
+      )
+    ) %>%
+    select(-c(l, m, h)) %>%
+    mutate(
+      name = var_labels[name]
+    ) %>%
+    pivot_wider(names_from = name, values_from = clean_val) %>%
+    arrange(scenario)
+
+  var_labels <- var_labels[var_labels %in% colnames(df_res)]
+  df_res <- df_res[, c("scenario", "year", var_labels)] %>%
+    select(-starts_with("__ignore__"))
+
+  left_join(data.frame(scenario = scenarios), df_res, by = "scenario")
+}
