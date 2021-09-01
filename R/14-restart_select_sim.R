@@ -95,10 +95,10 @@ min_ind <- which.min(rowSums(df_mat^2))
 as.list(df[min_ind, ]) # check STI values (not in calculation) gc:12.9, ct:15.1
 df[min_ind, 1:2]
 
-# Best == batch15 sim18
+# Best == batch37 sim7
 rs_path <- paste0("out/remote_jobs/", job, "/out/sim", df[min_ind, 2], ".rds")
 sim <- readRDS(rs_path)
-orig <- EpiModel::get_sims(sim, df[min_ind, 1])
+orig <- EpiModel::get_sims(sim, df[min_ind, 2])
 orig$epi <- orig$epi["num"] # keep only the "num" epi tracker
 
 saveRDS(orig, "out/est/restart.rds")
