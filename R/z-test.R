@@ -9,13 +9,14 @@ est <- readRDS("out/est/netest.rds")
 
 ncores <- 1
 control <- control_msm(
-  nsteps = 52 * 70,
+  nsteps = 52 * 10,
   nsims = ncores,
   ncores = ncores,
   verbose = FALSE
 )
 
 # param$epi_trackers <- list()
+param$epi_trackers <- restart_trackers
 
 ## Simulation
 sim <- netsim(est, param, init, control)

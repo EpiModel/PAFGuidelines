@@ -10,7 +10,7 @@ jobs <- list()
 source("R/utils-targets.R")
 
 needed_trackers <- c(
-  "n", "i", "i_dx", "i_sup", "linked1m"
+  "n", "i", "i_dx", "i_sup", "linked1m", "gc_s", "ct_s"
 )
 
 needed_pops <- c("ALL", "B", "H", "W")
@@ -23,7 +23,7 @@ needed_trackers <- vapply(
 
 needed_cols <- c(
   "sim", "time", "batch", "param_batch", "num",
-  "ir100.gc", "ir100.ct",
+  "incid.gc", "incid.ct",
   needed_trackers
 )
 
@@ -58,8 +58,8 @@ saveRDS(df_b, "out/restart_chooser.rds")
 df <- df_b %>%
   group_by(batch, sim) %>%
   summarise(
-    ir100.gc = median(ir100.gc, na.rm = TRUE),
-    ir100.ct = median(ir100.ct, na.rm = TRUE),
+    ir100.gc = median(incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200, na.rm = TRUE),
+    ir100.ct = median(incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200, na.rm = TRUE),
     i.prev.dx___B = median(i_dx___B / n___B, na.rm = TRUE),
     cc.dx___B = median(i_dx___B / i___B, na.rm = TRUE),
     cc.linked1m___B = median(linked1m___B / i_dx___B, na.rm = TRUE),

@@ -12,8 +12,8 @@ df <- df_b %>%
   filter(time > max(time) - 10 * 52) %>%
   group_by(param_batch) %>%
   summarise(
-    ir100.gc = median(ir100.gc, na.rm = TRUE),
-    ir100.ct = median(ir100.ct, na.rm = TRUE),
+    ir100.gc = median(incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200, na.rm = TRUE),
+    ir100.ct = median(incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200, na.rm = TRUE),
     i.prev.dx___B = median(i_dx___B / n___B, na.rm = TRUE),
     cc.dx___B = median(i_dx___B / i___B, na.rm = TRUE),
     cc.linked1m___B = median(linked1m___B / i_dx___B, na.rm = TRUE),
@@ -25,12 +25,12 @@ df <- df_b %>%
     i.prev.dx___W = median(i_dx___W / n___W, na.rm = TRUE),
     cc.dx___W = median(i_dx___W / i___W, na.rm = TRUE),
     cc.linked1m___W = median(linked1m___W / i_dx___W, na.rm = TRUE),
-    cc.vsupp___W = median(i_sup___W / i_dx___W, na.rm = TRUE),
-    prep = median(
-      (s_prep___B + s_prep___H + s_prep___W) /
-      (s_prep_elig___B + s_prep_elig___H + s_prep_elig___W),
-      na.rm = TRUE
-    )
+    cc.vsupp___W = median(i_sup___W / i_dx___W, na.rm = TRUE)
+    # prep = median(
+    #   (s_prep___B + s_prep___H + s_prep___W) /
+    #   (s_prep_elig___B + s_prep_elig___H + s_prep_elig___W),
+    #   na.rm = TRUE
+    # )
   ) %>%
   mutate(
     i.prev.dx___B = i.prev.dx___B - 0.33,
@@ -46,9 +46,14 @@ df <- df_b %>%
     cc.vsupp___H = cc.vsupp___H - 0.60,
     cc.vsupp___W = cc.vsupp___W - 0.72,
     ir100.gc = ir100.gc - 12.81,
-    ir100.ct = ir100.ct - 14.59,
-    prep = prep - 0.15
+    ir100.ct = ir100.ct - 14.59
+    # prep = prep - 0.15
   )
+
+df %>%
+  select(param_batch, i.prev.dx___B, i.prev.dx___H, i.prev.dx___W)
+
+df %>% filter(param_batch == 1) %>% as.list()
 
 df %>%
   group_by(param_batch) %>%

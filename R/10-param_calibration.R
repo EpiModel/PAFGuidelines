@@ -5,10 +5,10 @@ test_all_combination <- FALSE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
 sim_per_batch <- 28    # How many simulation per bactch
-batch_per_set <- 3     # How many sim_per_batch replications to do per parameter
+batch_per_set <- 10     # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_template"
+job_name <- "PAF_testrate_calib"
 ssh_host <- "hyak_mox"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -24,8 +24,8 @@ slurm_ressources <- list(
 
 # Set orig, param, init, control -----------------------------------------------
 #
-lnt <- TRUE # if FALSE: set `require.lnt` to FALSE and adjust ` prep.start.prob`
 source("R/utils-params.R", local = TRUE)
+param$epi_trackers <- restart_trackers
 
 control <- control_msm(
   nsteps = 65 * 52,
@@ -39,38 +39,22 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 #
 param_proposals <- list(
-  trans.scale = seq_cross( # 4^3 values to test; See utils-slurm_prep_helpers.R
-    c(1.5, 0.5, 0.5),
-    c(2.5, 1.5, 1.5),
-    length.out = 4
-  ),
-  uct.tprob = as.list(seq(0.8, 0.98, length.out = 4)), # 4 values to test
-  ugc.tprob = list(0.3, 0.1), # 2 values to test
-  tx.init.prob = list( # 2 values to test (each contains a set of 3)
-    c(0.12, 0.15, 0.16),
-    c(0.11, 0.10, 0.14)
+  trans.scale = list(
+    c(2.50, 0.3875, 0.275),
+    c(2.50, 0.39, 0.275),
+    c(2.50, 0.3925, 0.275),
+    c(2.50, 0.395, 0.275),
+    c(2.50, 0.3975, 0.275),
+    c(2.50, 0.4, 0.275)
   )
 )
 
 # Use this line to run only the default values
-param_proposals <- list(base_params__ = TRUE)
+# param_proposals <- list(base_params__ = TRUE)
 
 # Make some additional changes to param_proposals using the present values
 # must return NULL if the required elements are NULL
-relative_params <- list(
-  rgc.tprob = function(param) {
-    out <- NULL
-    if (!is.null(param$ugc.tprob))
-      out <- plogis(qlogis(param$ugc.tprob) + log(1.25))
-    out
-  },
-  rct.tprob = function(param) {
-    out <- NULL
-    if (!is.null(param$uct.tprob))
-      out <- plogis(qlogis(param$uct.tprob) + log(1.25))
-    out
-  }
-)
+relative_params <- list()
 
 # Automatic --------------------------------------------------------------------
 
@@ -85,6 +69,7 @@ if (test_all_combination) {
 if (exists("relative_params"))
   param_proposals <- make_relative_params(param_proposals, relative_params)
 
+unique_proposals <- rep(seq_along(param_proposals), batch_per_set)
 param_proposals <- rep(param_proposals, batch_per_set)
 sim_nums <- seq_along(param_proposals)
 
@@ -102,6 +87,7 @@ info$ssh_host <- ssh_host
 info$root_dir <- fs::path(paths$jobs_dir, job_name, paths$slurm_wf)
 info$df_keep <- steps_to_keep
 info$param_proposals <- param_proposals
+info$unique_proposals <- unique_proposals
 
 slurm_wf_tmpl_dir("inst/slurm_wf/", info$root_dir, force = T)
 

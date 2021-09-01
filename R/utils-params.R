@@ -33,7 +33,9 @@ ls_restart_trackers <- list(
   i        = epi_i,
   i_dx     = epi_i_dx,
   i_sup    = epi_i_sup,
-  linked1m = epi_linked_time(4)
+  linked1m = epi_linked_time(4),
+  gc_s     = epi_gc_s(c(0, 1)),
+  ct_s     = epi_ct_s(c(0, 1))
 )
 
 restart_trackers <- epi_tracker_by_race(
@@ -58,7 +60,7 @@ param <- param_msm(
   vl.acute.rise.int = 3,
   vl.acute.fall = 3,
 
-  hiv.test.rate = c(0.00385, 0.00385, 0.0069),
+  hiv.test.rate = c(0.0036, 0.0036, 0.00685),
   hiv.test.late.prob = rep(0, 3),
   tx.init.prob = c(0.1775, 0.19, 0.2521),
   tt.part.supp = 1 - full_tx_eff,
@@ -74,7 +76,7 @@ param <- param_msm(
   max.time.on.tx.part.int = 52 * 10,
   max.time.off.tx.part.int = 52 * 10,
   aids.mr = 1 / 250,
-  trans.scale =  c(2.50, 0.3875, 0.275), # c(3.16, 0.40, 0.30), #c(2.75, 0.4, 0.), #c(2.21, 0.405, 0.255),
+  trans.scale =  c(2.53, 0.40, 0.275), # c(3.16, 0.40, 0.30), #c(2.75, 0.4, 0.), #c(2.21, 0.405, 0.255),
   acts.scale = 1.00,
   acts.scale.main = 1.00,
   acts.scale.casl = 1.00,

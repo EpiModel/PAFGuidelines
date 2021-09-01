@@ -85,6 +85,7 @@ if (test_all_combination) {
 if (exists("relative_params"))
   param_proposals <- make_relative_params(param_proposals, relative_params)
 
+unique_proposals <- rep(seq_along(param_proposals), batch_per_set)
 param_proposals <- rep(param_proposals, batch_per_set)
 sim_nums <- seq_along(param_proposals)
 

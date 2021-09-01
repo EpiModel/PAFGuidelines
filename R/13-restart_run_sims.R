@@ -4,7 +4,8 @@ test_simulation <- TRUE
 test_all_combination <- FALSE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
-batch_per_set <- 50      # How many 28 replications to do per parameter
+sim_per_batch <- 28    # How many simulation per bactch
+batch_per_set <- 40     # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
 job_name <- "PAF_restart_test"
@@ -16,21 +17,20 @@ slurm_ressources <- list(
   partition = partition,
   job_name = job_name,
   account = if (partition == "csde") "csde" else "csde-ckpt",
-  n_cpus = 28,
+  n_cpus = sim_per_batch,
   memory = 5 * 1e3, # in Mb and PER CPU
   walltime = 60
 )
 
 # Set orig, param, init, control -----------------------------------------------
 #
-lnt <- TRUE # if FALSE: set `require.lnt` to FALSE and adjust ` prep.start.prob`
 source("R/utils-params.R", local = TRUE)
 param$epi_trackers <- restart_trackers
 
 control <- control_msm(
-  nsteps = 60 * 52,
-  nsims = 28,
-  ncores = 28,
+  nsteps = 65 * 52,
+  nsims = sim_per_batch,
+  ncores = sim_per_batch,
   save.nwstats = FALSE,
   save.clin.hist = FALSE,
   verbose = FALSE
@@ -38,6 +38,7 @@ control <- control_msm(
 
 # Parameters to test -----------------------------------------------------------
 param_proposals <- list(base_params__ = TRUE)
+relative_params <- list()
 
 # Automatic --------------------------------------------------------------------
 
