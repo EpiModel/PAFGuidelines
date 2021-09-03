@@ -31,6 +31,7 @@ var_labels <- c(
   "nia_ct_hivneg"            = "CT NIA - HIV negative",
 
   "pia"                      = "HIV PIA",
+  "pct_nia"                  = "Proportion of simulation with HIV PIA > 0",
   "pia_gc"                   = "GC PIA",
   "pia_gc_hivpos"            = "GC PIA - HIV positive",
   "pia_gc_hivneg"            = "GC PIA - HIV negative",

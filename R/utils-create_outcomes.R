@@ -212,7 +212,7 @@ make_outcomes <- function(baseline_file, scenarios_files,
 
 make_table <- function(df_res, ql = 0.025, qm = 0.5, qh = 0.975) {
   # this lines print the df with the variable in the right order
-  df_res <- df_res %>%
+  df_out <- df_res %>%
     sum_quants(ql, qm, qh) %>%
     pivot_longer(-scenario) %>%
     separate(name, into = c("name", "quantile"), sep = "_/_") %>%
@@ -234,10 +234,19 @@ make_table <- function(df_res, ql = 0.025, qm = 0.5, qh = 0.975) {
     pivot_wider(names_from = name, values_from = clean_val) %>%
     arrange(scenario)
 
-  df_res <- df_res[, c("scenario", var_labels)] %>%
+  df_res <- df_res %>%
+    group_by(scenario) %>%
+    summarise(pct_nia = mean(nia > 0)) %>%
+    mutate(pct_nia = scales::label_percent(0.1)(pct_nia))
+
+  names(df_res) <- c("scenario", var_labels["pct_nia"])
+
+  df_out <- left_join(df_out, df_res, scenario = scenario)
+
+  df_out <- df_out[, c("scenario", var_labels)] %>%
     select(-starts_with("__ignore__"))
 
-  left_join(data.frame(scenario = scenarios), df_res, by = "scenario")
+  left_join(data.frame(scenario = scenarios), df_out, by = "scenario")
 }
 
 

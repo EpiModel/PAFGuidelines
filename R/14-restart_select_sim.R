@@ -3,7 +3,7 @@ library(data.table)
 library(dplyr)
 
 # One or many job_names
-job_names <- c("PAF_restart_test")
+job_names <- c("PAF_restart")
 jobs <- list()
 
 # Read targets

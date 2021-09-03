@@ -1,7 +1,7 @@
 library(EpiModel)
 library(tidyverse)
 
-files_folder <- "out/remote_jobs/PAF_restart_tmp/out" # where are the calibration files
+files_folder <- "out/remote_jobs/PAF_restart/out" # where are the calibration files
 reprocess <- TRUE # set to TRUE to redo the file processing
 
 process_1batch <- function(file_name, out_dir) {
@@ -11,8 +11,8 @@ process_1batch <- function(file_name, out_dir) {
   dff <- dff %>%
     group_by(sim, time) %>%
     mutate(
-      ir100.gc = median(ir100.gc, na.rm = TRUE),
-      ir100.ct = median(ir100.ct, na.rm = TRUE),
+      ir100.gc = median(incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200, na.rm = TRUE),
+      ir100.ct = median(incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200, na.rm = TRUE),
       i.prev.dx.B = median(i_dx___B / n___B, na.rm = TRUE),
       i.prev.dx.H = median(i_dx___H / n___H, na.rm = TRUE),
       i.prev.dx.W = median(i_dx___W / n___W, na.rm = TRUE),

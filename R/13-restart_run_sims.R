@@ -5,10 +5,10 @@ test_all_combination <- FALSE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
 sim_per_batch <- 28    # How many simulation per bactch
-batch_per_set <- 40     # How many sim_per_batch replications to do per parameter
+batch_per_set <- 400     # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_restart_test"
+job_name <- "PAF_restart"
 ssh_host <- "hyak_mox"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -28,7 +28,7 @@ source("R/utils-params.R", local = TRUE)
 param$epi_trackers <- restart_trackers
 
 control <- control_msm(
-  nsteps = 65 * 52,
+  nsteps = 60 * 52,
   nsims = sim_per_batch,
   ncores = sim_per_batch,
   save.nwstats = FALSE,
