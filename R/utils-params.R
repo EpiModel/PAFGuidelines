@@ -120,10 +120,10 @@ param <- param_msm(
   rct.ntx.int    = 45,
   uct.ntx.int    = 45,
   ct.tx.int      = 1, # same. Time recommended to use condom
-  gc.sympt.prob.tx =  rep(0.9, 3),
-  ct.sympt.prob.tx =  rep(0.85, 3),
-  gc.asympt.prob.tx = rep(1, 3), # prob of starting tx if diagnosed but asympt
-  ct.asympt.prob.tx = rep(1, 3), # prob of starting tx if diagnosed but asympt
+  gc.sympt.prob.tx =  rep(0.7, 3),
+  ct.sympt.prob.tx =  rep(0.7, 3),
+  gc.asympt.prob.tx = rep(0.8, 3), # prob of starting tx if diagnosed but asympt
+  ct.asympt.prob.tx = rep(0.8, 3), # prob of starting tx if diagnosed but asympt
   sti.cond.eff = 0.90, # default
   sti.cond.fail = c(0.2, 0.2, 0.2), # default
   # Calibrate these **NO**

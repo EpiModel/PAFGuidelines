@@ -95,3 +95,81 @@ make_job_paths <- function(job_name, ssh_dir, ssh_host) {
 
   p
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+calibration_fun <- function(param_proposal, sim_num,
+                            orig, param, init, control,
+                            infos) {
+  library(EpiModelHIV)
+
+  # Helper function
+  update_list <- function(x, new_x) {
+    for (n in names(new_x)) {
+      if (is.list(new_x[[n]])) {
+        x[[n]] <- update_list(x[[n]], new_x[[n]])
+      } else if (is.function(new_x[[n]]) && ! is.function(x[[n]])) {
+        x[[n]] <- new_x[[n]](x[[n]])
+      } else {
+        x[[n]] <- new_x[[n]]
+      }
+    }
+    return(x)
+  }
+
+  param <- update_list(param, param_proposal)
+  sim <- netsim(orig, param, init, control)
+
+  library(dplyr)
+
+  d <- as_tibble(sim) %>%
+    calculate_targets(n_steps = 52) %>%
+    mutate(
+      batch = sim_num,
+      param_batch = infos$unique_proposals[batch]
+    )
+
+  saveRDS(
+    d,
+    paste0(infos$root_dir, "/out/", "calibration", sim_num, ".rds"),
+    compress = FALSE
+  )
+}
+
+gather_calibration_fun <- function(infos) {
+  out_dir <- fs::path(infos$root_dir, "out")
+  sim_files <- fs::dir_ls(out_dir, regexp = "\\d*.rds")
+
+  library(dplyr)
+
+  d <- bind_rows(lapply(sim_files, readRDS))
+
+  d <- d %>%
+    ungroup() %>%
+    group_by(param_batch) %>%
+    summarise(across(
+      - c(batch, sim),
+      median ~ median(.x, na.rm = TRUE)
+    ))
+
+  saveRDS(
+    d,
+    paste0(infos$root_dir, "/out/", "calibration_results.rds"),
+    compress = "xz"
+  )
+}

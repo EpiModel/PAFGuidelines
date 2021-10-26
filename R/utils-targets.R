@@ -17,10 +17,39 @@ targets <- c(
   # 3rd calibration set
   i.prev.dx.B = 0.33,
   i.prev.dx.H = 0.127,
-  i.prev.dx.W = 0.084
-  #prep_prop = 0.15,
-)
-
-prep_targets <- c(
+  i.prev.dx.W = 0.084,
   prep_prop = 0.15
 )
+
+calculate_targets <- function(d, n_steps = 52) {
+  d %>%
+    filter(time > max(time) - n_steps) %>%
+    group_by(sim) %>%
+    summarise(
+      ir100.gc = median(
+        incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200,
+        na.rm = TRUE
+      ),
+      ir100.ct = median(
+        incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200,
+        na.rm = TRUE
+      ),
+      i.prev.dx.B   = median(i_dx___B / n___B, na.rm = TRUE),
+      cc.dx.B       = median(i_dx___B / i___B, na.rm = TRUE),
+      cc.linked1m.B = median(linked1m___B / i_dx___B, na.rm = TRUE),
+      cc.vsupp.B    = median(i_sup___B / i_dx___B, na.rm = TRUE),
+      i.prev.dx.H   = median(i_dx___H / n___H, na.rm = TRUE),
+      cc.dx.H       = median(i_dx___H / i___H, na.rm = TRUE),
+      cc.linked1m.H = median(linked1m___H / i_dx___H, na.rm = TRUE),
+      cc.vsupp.H    = median(i_sup___H / i_dx___H, na.rm = TRUE),
+      i.prev.dx.W   = median(i_dx___W / n___W, na.rm = TRUE),
+      cc.dx.W       = median(i_dx___W / i___W, na.rm = TRUE),
+      cc.linked1m.W = median(linked1m___W / i_dx___W, na.rm = TRUE),
+      cc.vsupp.W    = median(i_sup___W / i_dx___W, na.rm = TRUE),
+      prep_prop = median(
+          (s_prep___B + s_prep___H + s_prep___W) /
+          (s_prep_elig___B + s_prep_elig___H + s_prep_elig___W),
+        na.rm = TRUE
+      )
+    )
+}

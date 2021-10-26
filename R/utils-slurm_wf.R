@@ -12,7 +12,7 @@ slurm_wf_tmpl_dir <- function(template_dir, wf_dir, force = FALSE) {
       message("Folder: '", wf_dir, "' exists. Erasing it (force == TRUE)")
       fs::dir_delete(wf_dir)
     } else {
-      stop("Folder: '", wf_dir, "' exists. To erasing it set `force = TRUE`")
+      stop("Folder: '", wf_dir, "' exists. To erase it set `force = TRUE`")
     }
   }
 
@@ -27,36 +27,29 @@ slurm_wf_tmpl_dir <- function(template_dir, wf_dir, force = FALSE) {
 #' @param resources a list of the parameters to pass to the `brew` templates
 #' @param what function to execute
 #' @param args a list of named parameters to pass to `what`
-slurm_wf_do.call <- function(wf_dir, resources, what, args = list()) {
-  job_dir <- fs::path(wf_dir, "job_scripts/")
-  starter_dir <- fs::path(wf_dir, "job_starters/")
-  rds_dir <- fs::path(wf_dir, "job_rds/")
+#' @param with_objects a list of named object
+#' @param compress compress argument passed to `saveRDS`
+slurm_wf_do.call <- function(wf_dir, resources, what, args = list(),
+                             with_objects = list(), compress = TRUE) {
+  wf_infos <- slurm_wf_infos(wf_dir, resources)
 
-  other_jobs <- list.files(job_dir)
-  if (length(other_jobs) == 0) {
-    job_num <- "001"
-  } else {
-    max_num <- max(other_jobs)
-    max_num <- as.numeric(strsplit(max_num, "\\.")[[1]][1])
-    job_num <- sprintf("%03d", max_num + 1)
-  }
-
-  job_name <- paste0(job_dir,job_num, ".sh")
-  starter_name <- paste0(starter_dir, job_num, ".sh")
-  rds_name <- paste0(rds_dir, job_num, ".rds")
+  resources$job_name <- wf_infos$step_name
+  resources$afterany <- wf_infos$prev_step
 
   if (is.null(resources$log_file))
     resources$log_file <- paste0(wf_dir, "/log/%x_%a.out")
 
   wf_list <- list(what = what, args = args)
-  saveRDS(wf_list, file = rds_name, compress = "xz")
+  saveRDS(wf_list, file = wf_infos$rds_name, compress = compress)
+  saveRDS(with_objects, file = wf_infos$with_name, compress = compress)
 
-  rscript_cmd <- paste0(
-    "wf_list <- readRDS(\"", rds_name, "\");",
-    "do.call(wf_list$what, args = wf_list$args)")
+  wf_infos$rscript_cmd <- paste0(
+    "wf_list <- readRDS(\"", wf_infos$rds_name, "\");",
+    "with_objects <- readRDS(\"", wf_infos$with_name, "\");",
+    "with( with_objects, {do.call(wf_list$what, args = wf_list$args)} )"
+  )
 
-  brew::brew(paste0(wf_dir, "/job.tmpl"), job_name)
-  brew::brew(paste0(wf_dir, "/starter.tmpl"), starter_name)
+  slurm_wf_brew_templates(wf_dir, resources, wf_infos)
 }
 
 #' Execute a function using the `base::Map` syntax in a "slurm workflow"
@@ -67,39 +60,83 @@ slurm_wf_do.call <- function(wf_dir, resources, what, args = list()) {
 #' @param FUN function to execute
 #' @param ... named vector of parameters to iterate upon and pass to `FUN`
 #' @param MoreArgs a list of named parameters to pass to `FUN`
-slurm_wf_Map <- function(wf_dir, resources, FUN, ..., MoreArgs = NULL) {
-  job_dir <- paste0(wf_dir, "/job_scripts/")
-  starter_dir <- paste0(wf_dir, "/job_starters/")
-  rds_dir <- paste0(wf_dir, "/job_rds/")
+#' @param with_objects a list of named object
+#' @param compress compress argument passed to `saveRDS`
+slurm_wf_Map <- function(wf_dir, resources, FUN, ..., MoreArgs = NULL,
+                         with_objects = list(), compress = TRUE) {
+  wf_infos <- slurm_wf_infos(wf_dir, resources)
 
-  other_jobs <- list.files(job_dir)
-  if (length(other_jobs) == 0) {
-    job_num <- "001"
-  } else {
-    max_num <- max(other_jobs)
-    max_num <- as.numeric(strsplit(max_num, "\\.")[[1]][1])
-    job_num <- sprintf("%03d", max_num + 1)
-  }
+  resources$job_name <- wf_infos$step_name
+  resources$afterany <- wf_infos$prev_step
 
   if (is.null(resources$log_file))
     resources$log_file <- paste0(wf_dir, "/log/%x_%a.out")
-
-  job_name <- paste0(job_dir,job_num, ".sh")
-  starter_name <- paste0(starter_dir, job_num, ".sh")
-  rds_name <- paste0(rds_dir, job_num, ".rds")
 
   dots <- list(...)
   resources$n_array <- length(dots[[1]])
 
   wf_list <- list(FUN = FUN, dots = dots, MoreArgs = MoreArgs)
-  saveRDS(wf_list, file = rds_name, compress = "xz")
+  saveRDS(wf_list, file = wf_infos$rds_name, compress = compress)
+  saveRDS(with_objects, file = wf_infos$with_name, compress = compress)
 
-  rscript_cmd <- paste0(
-    "wf_list <- readRDS(\"", rds_name, "\");",
+  wf_infos$rscript_cmd <- paste0(
+    "wf_list <- readRDS(\"", wf_infos$rds_name, "\");",
+    "with_objects <- readRDS(\"", wf_infos$with_name, "\");",
     "array_id <- as.numeric(Sys.getenv(\"SLURM_ARRAY_TASK_ID\"));",
     "args_ls <- c(lapply(wf_list$dots, `[[`, array_id), wf_list$MoreArgs);",
-    "do.call(wf_list$FUN, args = args_ls)")
+    "with( with_objects, {do.call(wf_list$FUN, args = args_ls)} )"
+  )
 
-  brew::brew(paste0(wf_dir, "/job.tmpl"), job_name)
-  brew::brew(paste0(wf_dir, "/starter.tmpl"), starter_name)
+  slurm_wf_brew_templates(wf_dir, resources, wf_infos)
+}
+
+slurm_wf_infos <- function(wf_dir, resources) {
+  wf_infos <- list(
+    job_name = resources$job_name,
+    job_dir = fs::path(wf_dir, "job_scripts/"),
+    starter_dir = fs::path(wf_dir, "job_starters/"),
+    rds_dir = fs::path(wf_dir, "job_rds/"),
+    with_dir = fs::path(wf_dir, "job_with/")
+  )
+
+  other_jobs <- list.files(wf_infos$job_dir)
+  if (length(other_jobs) == 0) {
+    max_num <- 0
+    wf_infos$job_num <- "001"
+  } else {
+    max_num <- as.numeric(strsplit(max(other_jobs), "\\.")[[1]][1])
+    wf_infos$job_num <- sprintf("%03d", max_num + 1)
+  }
+
+  wf_infos$step_name <- paste0(wf_infos$job_name, wf_infos$job_num)
+
+  if (max_num > 0) {
+    wf_infos$prev_step <- paste0(wf_infos$job_name, sprintf("%03d", max_num))
+  } else {
+    wf_infos$prev_step <- NULL
+  }
+
+  wf_infos$starter_name <- fs::path(
+    wf_infos$starter_dir,
+    paste0(wf_infos$job_num, ".sh")
+  )
+  wf_infos$rds_name <- fs::path(
+    wf_infos$rds_dir,
+    paste0(wf_infos$job_num, ".rds")
+  )
+  wf_infos$with_name <- fs::path(
+    wf_infos$with_dir,
+    paste0(wf_infos$job_num, ".rds")
+  )
+  wf_infos$job_name <- fs::path(
+    wf_infos$job_dir,
+    paste0(wf_infos$job_name, ".sh")
+  )
+
+  wf_infos
+}
+
+slurm_wf_brew_templates <- function(wf_dir, resources, wf_infos) {
+  brew::brew(paste0(wf_dir, "/job.tmpl"), wf_infos$job_name)
+  brew::brew(paste0(wf_dir, "/starter.tmpl"), wf_infos$starter_name)
 }

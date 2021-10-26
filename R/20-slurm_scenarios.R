@@ -1,18 +1,18 @@
 source("R/utils-slurm_prep_helpers.R") # requires `purrr`
 source("R/utils-slurm_wf.R")
-test_simulation <- TRUE
+test_simulation <- F
 
 # Set slurm parameters ---------------------------------------------------------
 sim_per_batch <- 40    # How many simulation per bactch
 batch_per_set <- 25   # How many sim_per_batch replications to do per parameter
 steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "k-PAF_sc_nosti2"
+job_name <- "k-PAF_test"
 ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
 # Options passed to slurm_wf
-slurm_ressources <- list(
+slurm_resources <- list(
   partition = partition,
   job_name = job_name,
   account = if (partition == "csde") "csde" else "csde-ckpt",
@@ -70,7 +70,7 @@ info$root_dir <- fs::path(paths$jobs_dir, job_name, paths$slurm_wf)
 info$df_keep <- steps_to_keep
 info$param_proposals <- param_proposals
 
-slurm_wf_tmpl_dir("inst/slurm_wf/", info$root_dir, force = T)
+slurm_wf_tmpl_dir("inst/slurm_wf/", info$root_dir, force = TRUE)
 
 if (test_simulation) {
   control_test <- control
@@ -90,7 +90,7 @@ if (test_simulation) {
 
 slurm_wf_Map(
   info$root_dir,
-  resources = slurm_ressources,
+  resources = slurm_resources,
   FUN = run_netsim_updaters_fun,
   sim_num = sim_nums,
   updaters = param_proposals,

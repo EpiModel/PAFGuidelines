@@ -1,5 +1,6 @@
 source("R/utils-params.R")
-pkgload::load_all("../EpiModelHIV-p/")
+# pkgload::load_all("../EpiModelHIV-p.git/PAFGuidelines")
+library(EpiModelHIV)
 # orig <- readRDS("out/est/restart.rds")
 
 ## Parameters
