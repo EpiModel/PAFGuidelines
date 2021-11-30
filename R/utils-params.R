@@ -172,14 +172,16 @@ param <- param_msm(
     list(
       at = prep_start_time,
       param = list(
-        prep.start.prob = prep_start_prob * 2
+        # prep.start.prob = prep_start_prob * 2
+        prep.start.prob = function(x) x * 2
       )
     ),
     # go back to normal to get to 15%
     list(
       at = prep_start_time + 52,
       param = list(
-        prep.start.prob =  prep_start_prob
+        # prep.start.prob =  prep_start_prob
+        prep.start.prob = function(x) x / 2
       )
     )
   ),

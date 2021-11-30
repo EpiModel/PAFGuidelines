@@ -4,12 +4,12 @@ test_simulation <- TRUE
 test_all_combination <- FALSE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
-sim_per_batch <- 28    # How many simulation per bactch
-batch_per_set <- 10     # How many sim_per_batch replications to do per parameter
+sim_per_batch <- 40    # How many simulation per bactch
+batch_per_set <- 10    # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_testrate_calib"
-ssh_host <- "hyak_mox"
+job_name <- "k-PAF_sti_incid25k"
+ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
 # Options passed to slurm_wf
@@ -18,8 +18,8 @@ slurm_ressources <- list(
   job_name = job_name,
   account = if (partition == "csde") "csde" else "csde-ckpt",
   n_cpus = sim_per_batch,
-  memory = 5 * 1e3, # in Mb and PER CPU
-  walltime = 60
+  memory = 10 * 1e3, # in Mb and PER CPU
+  walltime = 240
 )
 
 # Set orig, param, init, control -----------------------------------------------
@@ -28,7 +28,7 @@ source("R/utils-params.R", local = TRUE)
 param$epi_trackers <- restart_trackers
 
 control <- control_msm(
-  nsteps = 65 * 52,
+  nsteps = 125 * 52,
   nsims = sim_per_batch,
   ncores = sim_per_batch,
   save.nwstats = FALSE,
@@ -39,22 +39,26 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 #
 param_proposals <- list(
-  trans.scale = list(
-    c(2.50, 0.3875, 0.275),
-    c(2.50, 0.39, 0.275),
-    c(2.50, 0.3925, 0.275),
-    c(2.50, 0.395, 0.275),
-    c(2.50, 0.3975, 0.275),
-    c(2.50, 0.4, 0.275)
-  )
+  uct.tprob = as.list(seq(0.13, 0.14, length.out = 6)),
+  ugc.tprob = as.list(seq(0.2, 0.3, length.out = 6))
 )
-
-# Use this line to run only the default values
-# param_proposals <- list(base_params__ = TRUE)
 
 # Make some additional changes to param_proposals using the present values
 # must return NULL if the required elements are NULL
-relative_params <- list()
+relative_params <- list(
+  rgc.tprob = function(param) {
+    out <- NULL
+    if (!is.null(param$ugc.tprob))
+      out <- plogis(qlogis(param$ugc.tprob) + log(1.5))
+    out
+  },
+  rct.tprob = function(param) {
+    out <- NULL
+    if (!is.null(param$uct.tprob))
+      out <- plogis(qlogis(param$uct.tprob) + log(1.5))
+    out
+  }
+)
 
 # Automatic --------------------------------------------------------------------
 

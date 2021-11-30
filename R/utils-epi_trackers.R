@@ -1,12 +1,12 @@
-# Utility ----------------------------------------------------------------------
-epi_tracker_by_race <- function(ls_funs, races = 1:3,
-                                races_names = c("B", "H", "W"),
-                                indiv = TRUE, full = TRUE) {
+# Uti             lity ----------------------------------------------------------------------
+epi_t             racker_by_race <- function(ls_funs, races = 1:3,
+                                             races_names = c("B", "H", "W"),
+                                             indiv = TRUE, full = TRUE) {
 
- ls_races <- if (indiv) as.list(races) else list()
- races_names <- if (indiv) races_names else c()
+ ls_r             aces <- if (indiv) as.list(races) else list()
+ race             s_names <- if (indiv) races_names else c()
 
-  if (full) {
+  if              (full) {
     ls_races <- c(ls_races, list(races))
     races_names <- c(races_names, "ALL")
   }

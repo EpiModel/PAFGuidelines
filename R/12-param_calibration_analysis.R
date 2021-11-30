@@ -1,3 +1,5 @@
+source("R/utils-targets.R")
+
 library(tidyverse)
 theme_set(theme_light())
 
@@ -9,11 +11,18 @@ param_proposals <- jobs[[1]]$infos$param_proposals
 df <- df_b
 
 df <- df_b %>%
-  filter(time > max(time) - 10 * 52) %>%
+  filter(time > max(time) - 30 * 52) %>%
   group_by(param_batch) %>%
   summarise(
+    num = median(num),
+    gc_s = median((gc_s___B + gc_s___H + gc_s___W), na.rm = TRUE),
+    ct_s = median((ct_s___B + ct_s___H + ct_s___W), na.rm = TRUE),
+    gc_i = median(num - (gc_s___B + gc_s___H + gc_s___W), na.rm = TRUE),
+    ct_i = median(num - (ct_s___B + ct_s___H + ct_s___W), na.rm = TRUE),
     ir100.gc = median(incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200, na.rm = TRUE),
     ir100.ct = median(incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200, na.rm = TRUE),
+    incid.gc = median(incid.gc, na.rm = TRUE),
+    incid.ct = median(incid.ct, na.rm = TRUE),
     i.prev.dx___B = median(i_dx___B / n___B, na.rm = TRUE),
     cc.dx___B = median(i_dx___B / i___B, na.rm = TRUE),
     cc.linked1m___B = median(linked1m___B / i_dx___B, na.rm = TRUE),
@@ -51,7 +60,66 @@ df <- df_b %>%
   )
 
 df %>%
-  select(param_batch, i.prev.dx___B, i.prev.dx___H, i.prev.dx___W)
+  select(param_batch, gc_s, ct_s, incid.gc, incid.ct, ir100.gc, ir100.ct)
+
+good_params <- c(5, 6)
+
+param_proposals[good_params]
+
+d <- df_b %>%
+  add_targets() %>%
+  group_by(param_batch, time) %>%
+  summarise(across(
+    c(ir100.ct, ir100.gc),
+    list(
+      q1 = ~ quantile(.x, probs = 0.25, na.rm = TRUE),
+      q2 = ~ quantile(.x, probs = 0.50, na.rm = TRUE),
+      q3 = ~ quantile(.x, probs = 0.75, na.rm = TRUE)
+    )
+  )) %>%
+  pivot_longer(-c(param_batch, time)) %>%
+  separate(name, c("measure", "pos"), sep = "_") %>%
+  pivot_wider(names_from = pos, values_from = value)
+
+d %>%
+  filter(time > 1000) %>%
+  ggplot(aes(
+    x = time / 52, y = q2, ymin = q1, ymax = q3,
+    col = measure, fill = measure
+  )) +
+  geom_line() +
+  geom_ribbon(alpha = 0.3, size = 0) +
+  geom_hline(yintercept = 12.81) +
+  geom_hline(yintercept = 14.59) +
+  facet_wrap(~ param_batch)
+
+
+df_b %>%
+  select(time, param_batch, incid.ct, incid.gc) %>%
+  filter(param_batch %in% good_params) %>%
+  pivot_longer(-c(time, param_batch)) %>%
+  group_by(param_batch, name) %>%
+  arrange(time) %>%
+  mutate(value = RcppRoll::roll_meanr(value, n = 13)) %>%
+  ggplot(aes(x = time, y = value, col = as.character(param_batch))) +
+  geom_line() +
+  facet_wrap(~name)
+
+ggsave("out/sticalib_long.png")
+
+df_b %>%
+  filter(
+    param_batch == 5
+  ) %>%
+  ggplot(aes(
+    x = time,
+    # col = as.factor(sim)
+    y = incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200
+    # y = incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200
+  )) +
+  geom_smooth(alpha = 0.3) +
+  geom_hline(yintercept = 12.81) +
+  geom_hline(yintercept = 14.59)
 
 df %>% filter(param_batch == 1) %>% as.list()
 

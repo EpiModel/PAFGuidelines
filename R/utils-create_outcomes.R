@@ -24,52 +24,8 @@ make_outcomes <- function(baseline_file, scenarios_files,
   # Calculate baseline elements
   df_baseline <- readRDS(baseline_file)
 
-  df_base_cum <- df_baseline %>%
-    filter(time > max(time) - 52 * 10) %>%
-    group_by(batch, sim) %>%
-    summarise(
-      cum_incid = sum(incid, na.rm = TRUE),
-      cum_incid_gc_hivpos = sum(incid.gc.hivpos, na.rm = TRUE),
-      cum_incid_gc_hivneg = sum(incid.gc.hivneg, na.rm = TRUE),
-      cum_incid_ct_hivpos = sum(incid.ct.hivpos, na.rm = TRUE),
-      cum_incid_ct_hivneg = sum(incid.ct.hivneg, na.rm = TRUE)
-    ) %>%
-    ungroup() %>%
-    summarise(across(-c(batch, sim), median))
-
-  base_cum_incid <- df_base_cum$cum_incid
-  base_cum_incid_gc_hivpos <- df_base_cum$cum_incid_gc_hivpos
-  base_cum_incid_gc_hivneg <- df_base_cum$cum_incid_gc_hivneg
-  base_cum_incid_ct_hivpos <- df_base_cum$cum_incid_ct_hivpos
-  base_cum_incid_ct_hivneg <- df_base_cum$cum_incid_ct_hivneg
-
-  # Scenarios
-  df_ls <- vector(mode = "list", length(scenarios_files))
-  df_cur <- 0
-  for (fle in scenarios_files) {
-    fle_nst <- paste0(stringr::str_sub(fle, 1, -5), "___no_sti_effect.rds")
-
-    df_sc <- readRDS(fle)
-    df_nst <- readRDS(fle_nst)
-    df_nst <- df_nst %>%
-      filter(time > max(time) - 52 * 10) %>%
-      group_by(batch, sim) %>%
-      summarise(
-        cum_incid = sum(incid, na.rm = TRUE),
-        cum_incid_gc_hivpos = sum(incid.gc.hivpos, na.rm = TRUE),
-        cum_incid_gc_hivneg = sum(incid.gc.hivneg, na.rm = TRUE),
-        cum_incid_ct_hivpos = sum(incid.ct.hivpos, na.rm = TRUE),
-        cum_incid_ct_hivneg = sum(incid.ct.hivneg, na.rm = TRUE)
-      ) %>%
-      ungroup() %>%
-      summarise(across(-c(batch, sim), median))
-
-    df_cur <- df_cur + 1
-
-    # outcome cumulated over intervention (10y)
-    df_cum <- df_sc %>%
-      filter(time > max(time) - 52 * 10) %>%
-      group_by(scenario, batch, sim) %>%
+  cum_shared <- function(d) {
+    d %>%
       summarise(
         cum_incid = sum(incid, na.rm = TRUE),
         cum_incid_gc_hivpos = sum(incid.gc.hivpos, na.rm = TRUE),
@@ -130,32 +86,79 @@ make_outcomes <- function(baseline_file, scenarios_files,
         test_sti = test_sti_hivneg + test_sti_hivpos,
         test_sti_pos_hivpos = test_rsti_pos_hivpos + test_usti_pos_hivpos,
         test_sti_pos_hivneg = test_rsti_pos_hivneg + test_usti_pos_hivneg,
-        test_sti_pos = test_sti_pos_hivneg + test_sti_pos_hivpos,
-        nia = (base_cum_incid - cum_incid),
-        pia = nia / base_cum_incid,
-        nnt = test_hiv / nia,
-        nia_gc_hivpos = (base_cum_incid_gc_hivpos - cum_incid_gc_hivpos),
-        pia_gc_hivpos = nia_gc_hivpos / base_cum_incid_gc_hivpos,
-        nnt_gc_hivpos = test_gc_hivpos / nia_gc_hivpos,
-        nia_gc_hivneg = (base_cum_incid_gc_hivneg - cum_incid_gc_hivneg),
-        pia_gc_hivneg = nia_gc_hivneg / base_cum_incid_gc_hivneg,
-        nnt_gc_hivneg = test_gc_hivneg / nia_gc_hivneg,
-        nia_ct_hivpos = (base_cum_incid_ct_hivpos - cum_incid_ct_hivpos),
-        pia_ct_hivpos = nia_ct_hivpos / base_cum_incid_ct_hivpos,
-        nnt_ct_hivpos = test_ct_hivpos / nia_ct_hivpos,
-        nia_ct_hivneg = (base_cum_incid_ct_hivneg - cum_incid_ct_hivneg),
-        pia_ct_hivneg = nia_ct_hivneg / base_cum_incid_ct_hivneg,
-        nnt_ct_hivneg = test_ct_hivneg / nia_ct_hivneg,
+        test_sti_pos = test_sti_pos_hivneg + test_sti_pos_hivpos
+      )
+  }
+
+  dbc <- df_baseline %>%
+    filter(time > max(time) - 52 * 10) %>%
+    group_by(batch, sim) %>%
+    cum_shared() %>%
+    ungroup() %>%
+    summarise(across(-c(batch, sim), median))
+
+  # Scenarios
+  df_ls <- vector(mode = "list", length(scenarios_files))
+  df_cur <- 0
+  for (fle in scenarios_files) {
+    fle_nst <- paste0(stringr::str_sub(fle, 1, -5), "___no_sti_effect.rds")
+
+    df_sc <- readRDS(fle)
+    df_nst <- readRDS(fle_nst)
+    df_nst <- df_nst %>%
+      filter(time > max(time) - 52 * 10) %>%
+      group_by(batch, sim) %>%
+      summarise(
+        cum_incid = sum(incid, na.rm = TRUE),
+        cum_incid_gc_hivpos = sum(incid.gc.hivpos, na.rm = TRUE),
+        cum_incid_gc_hivneg = sum(incid.gc.hivneg, na.rm = TRUE),
+        cum_incid_ct_hivpos = sum(incid.ct.hivpos, na.rm = TRUE),
+        cum_incid_ct_hivneg = sum(incid.ct.hivneg, na.rm = TRUE)
+      ) %>%
+      ungroup() %>%
+      summarise(across(-c(batch, sim), median))
+
+    df_cur <- df_cur + 1
+
+    # outcome cumulated over intervention (10y)
+    df_cum <- df_sc %>%
+      filter(time > max(time) - 52 * 10) %>%
+      group_by(scenario, batch, sim) %>%
+      cum_shared() %>%
+      mutate(
+        nia = (dbc$cum_incid - cum_incid),
+        pia = nia / dbc$cum_incid,
+        nnt = ( test_hiv - dbc$test_hiv ) / nia,
+        nia_gc_hivpos = (dbc$cum_incid_gc_hivpos - cum_incid_gc_hivpos),
+        pia_gc_hivpos = nia_gc_hivpos / dbc$cum_incid_gc_hivpos,
+        nnt_gc_hivpos = (test_gc_hivpos - dbc$test_gc_hivpos) / nia_gc_hivpos,
+        nia_gc_hivneg = (dbc$cum_incid_gc_hivneg - cum_incid_gc_hivneg),
+        pia_gc_hivneg = nia_gc_hivneg / dbc$cum_incid_gc_hivneg,
+        nnt_gc_hivneg = (test_gc_hivneg - dbc$test_gc_hivneg) / nia_gc_hivneg,
+        nia_ct_hivpos = (dbc$cum_incid_ct_hivpos - cum_incid_ct_hivpos),
+        pia_ct_hivpos = nia_ct_hivpos / dbc$cum_incid_ct_hivpos,
+        nnt_ct_hivpos = (test_ct_hivpos - dbc$test_ct_hivpos) / nia_ct_hivpos,
+        nia_ct_hivneg = (dbc$cum_incid_ct_hivneg - cum_incid_ct_hivneg),
+        pia_ct_hivneg = nia_ct_hivneg / dbc$cum_incid_ct_hivneg,
+        nnt_ct_hivneg = (test_ct_hivneg - dbc$test_ct_hivneg) / nia_ct_hivneg,
         nia_gc = nia_gc_hivpos + nia_gc_hivneg,
         pia_gc = nia_gc /
-          (base_cum_incid_gc_hivpos + base_cum_incid_gc_hivneg),
-        nnt_gc = (test_gc_hivpos + test_gc_hivneg) / nia_gc,
+          (dbc$cum_incid_gc_hivpos + dbc$cum_incid_gc_hivneg),
+        nnt_gc = ((test_gc_hivpos + test_gc_hivneg) -
+                  (dbc$test_gc_hivpos + dbc$test_gc_hivneg)) /
+                  nia_gc,
         nia_ct = nia_ct_hivpos + nia_ct_hivneg,
         pia_ct = nia_ct /
-          (base_cum_incid_ct_hivpos + base_cum_incid_ct_hivneg),
-        nnt_ct = (test_ct_hivpos + test_ct_hivneg) / nia_ct,
-        nnt_hiv_sti = ((test_ct_hivpos + test_ct_hivneg) +
-          (test_gc_hivpos + test_gc_hivneg)) / nia,
+          (dbc$cum_incid_ct_hivpos + dbc$cum_incid_ct_hivneg),
+        nnt_ct = ((test_ct_hivpos + test_ct_hivneg) -
+                  (dbc$test_ct_hivpos + dbc$test_ct_hivneg)) /
+                  nia_ct,
+        nnt_hiv_sti = (
+          (test_ct_hivpos + test_ct_hivneg +
+           test_gc_hivpos + test_gc_hivneg)
+          (dbc$test_ct_hivpos + dbc$test_ct_hivneg +
+           dbc$test_gc_hivpos + dbc$test_gc_hivneg)
+        ) / nia,
         cum_incid_diff = cum_incid - df_nst[["cum_incid"]][1],
         cum_incid_gc_hivpos_diff = cum_incid_gc_hivpos - df_nst[["cum_incid_gc_hivpos"]][1],
         cum_incid_gc_hivneg_diff = cum_incid_gc_hivneg - df_nst[["cum_incid_gc_hivneg"]][1],

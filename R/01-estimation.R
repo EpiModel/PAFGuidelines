@@ -25,7 +25,7 @@ netstats <- build_netstats(
   epistats,
   netparams,
   expect.mort = 0.000478213,
-  network.size = 10000
+  network.size = 25 * 1e3
 )
 saveRDS(netstats, file = "out/est/netstats.rds")
 

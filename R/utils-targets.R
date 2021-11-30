@@ -53,3 +53,43 @@ calculate_targets <- function(d, n_steps = 52) {
       )
     )
 }
+
+add_targets <- function(d) {
+    d %>% mutate(
+      ir100.gc = incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200,
+      ir100.ct = incid.ct / (ct_s___B + ct_s___H + ct_s___W) * 5200,
+      i.prev.dx.B   = i_dx___B / n___B,
+      cc.dx.B       = i_dx___B / i___B,
+      cc.linked1m.B = linked1m___B / i_dx___B,
+      cc.vsupp.B    = i_sup___B / i_dx___B,
+      i.prev.dx.H   = i_dx___H / n___H,
+      cc.dx.H       = i_dx___H / i___H,
+      cc.linked1m.H = linked1m___H / i_dx___H,
+      cc.vsupp.H    = i_sup___H / i_dx___H,
+      i.prev.dx.W   = i_dx___W / n___W,
+      cc.dx.W       = i_dx___W / i___W,
+      cc.linked1m.W = linked1m___W / i_dx___W,
+      cc.vsupp.W    = i_sup___W / i_dx___W#,
+    #   prep_prop = (s_prep___B + s_prep___H + s_prep___W) /
+    #               (s_prep_elig___B + s_prep_elig___H + s_prep_elig___W)
+    )
+}
+
+source("R/utils-epi_trackers.R")
+ls_calib_trackers <- list(
+  n           = epi_n,
+  i           = epi_i,
+  i_dx        = epi_i_dx,
+  i_sup       = epi_i_sup,
+  linked1m    = epi_linked_time(4),
+  gc_s        = epi_gc_s(c(0, 1)),
+  ct_s        = epi_ct_s(c(0, 1)),
+  s_prep      = epi_s_prep,
+  s_prep_elig = epi_s_prep_elig
+)
+
+calib_trackers <- epi_tracker_by_race(
+  ls_calib_trackers,
+  full = FALSE,
+  indiv = TRUE
+)
