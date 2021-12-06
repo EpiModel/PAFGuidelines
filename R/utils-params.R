@@ -50,7 +50,7 @@ netstats <- readRDS("out/est/netstats.rds")
 epistats <- readRDS("out/est/epistats.rds")
 
 full_tx_eff <- rep(1, 3)
-prep_start_time <- 52 * 65 + 1
+prep_start_time <- 52 * 125 + 1
 prep_start_prob <- rep(0.31, 3)
 
 param <- param_msm(
@@ -105,10 +105,10 @@ param <- param_msm(
   ## stitestguidelines appendix table s2
   #
   # Calibrate these
-  ugc.tprob      = 0.3375,
-  rgc.tprob      = 0.4331551, # plogis(qlogis(param$ugc.tprob) + log(1.5))
-  uct.tprob      = 0.21875,
-  rct.tprob      = 0.2957746, # plogis(qlogis(param$uct.tprob) + log(1.5))
+  ugc.tprob      = 0.20525, # no prep (0.1877197)
+  rgc.tprob      = 0.27922, # plogis(qlogis(param$ugc.tprob) + log(1.5))
+  uct.tprob      = 0.138,   # no prep (0.13125)
+  rct.tprob      = 0.1936389, # plogis(qlogis(param$uct.tprob) + log(1.5))
   #
   rgc.sympt.prob = 0.16,
   ugc.sympt.prob = 0.80,

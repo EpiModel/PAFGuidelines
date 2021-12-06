@@ -62,7 +62,10 @@ df <- df_b %>%
 df %>%
   select(param_batch, gc_s, ct_s, incid.gc, incid.ct, ir100.gc, ir100.ct)
 
-good_params <- c(5, 6)
+df %>%
+  select(param_batch, starts_with("i.prev.dx"))
+
+good_params <- c(3, 5)
 
 param_proposals[good_params]
 
@@ -82,7 +85,10 @@ d <- df_b %>%
   pivot_wider(names_from = pos, values_from = value)
 
 d %>%
-  filter(time > 1000) %>%
+  filter(
+    time > 1000,
+    param_batch == 1
+  ) %>%
   ggplot(aes(
     x = time / 52, y = q2, ymin = q1, ymax = q3,
     col = measure, fill = measure

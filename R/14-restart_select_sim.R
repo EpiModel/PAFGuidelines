@@ -3,7 +3,7 @@ library(data.table)
 library(dplyr)
 
 # One or many job_names
-job_names <- c("PAF_restart")
+job_names <- c("k-PAF_sti_incid25k")
 jobs <- list()
 
 # Read targets
@@ -85,12 +85,14 @@ df <- df_b %>%
     cc.linked1m___W = cc.linked1m___W - 0.76,
     cc.vsupp___B = cc.vsupp___B - 0.55,
     cc.vsupp___H = cc.vsupp___H - 0.60,
-    cc.vsupp___W = cc.vsupp___W - 0.72
+    cc.vsupp___W = cc.vsupp___W - 0.72,
+    ir100.gc = (ir100.gc - 12.81) /12.81,
+    ir100.ct = (ir100.ct - 14.59) / 14.59
   )
 
 summarise(ungroup(df), across(everything(), median)) %>% as.list()
 
-df_mat <- as.matrix(df[, 5:ncol(df)])
+df_mat <- as.matrix(df[, 3:ncol(df)])
 min_ind <- which.min(rowSums(df_mat^2))
 as.list(df[min_ind, ]) # check STI values (not in calculation) gc:12.9, ct:15.1
 df[min_ind, 1:2]

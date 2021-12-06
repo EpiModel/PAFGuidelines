@@ -39,8 +39,8 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 #
 param_proposals <- list(
-  uct.tprob = as.list(seq(0.13, 0.14, length.out = 6)),
-  ugc.tprob = as.list(seq(0.2, 0.3, length.out = 6))
+  uct.tprob = as.list(seq(0.129, 0.1335, length.out = 5)),
+  ugc.tprob = as.list(seq(0.19, 0.203, length.out = 5))
 )
 
 # Make some additional changes to param_proposals using the present values
@@ -59,6 +59,8 @@ relative_params <- list(
     out
   }
 )
+
+# param_proposals <- list(base_params__ = TRUE)
 
 # Automatic --------------------------------------------------------------------
 

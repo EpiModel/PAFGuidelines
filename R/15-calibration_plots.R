@@ -1,7 +1,7 @@
 library(EpiModel)
 library(tidyverse)
 
-files_folder <- "out/remote_jobs/PAF_restart/out" # where are the calibration files
+files_folder <- "out/remote_jobs/k-PAF_sti_incid25k/out" # where are the calibration files
 reprocess <- TRUE # set to TRUE to redo the file processing
 
 process_1batch <- function(file_name, out_dir) {
@@ -41,7 +41,7 @@ process_1batch <- function(file_name, out_dir) {
 
 dir_part <- "out/part_dfs"
 if (reprocess) {
-  future::plan(future::multicore, workers = 4)
+  future::plan(future::multicore, workers = 2)
 
   filenames <- fs::dir_ls(files_folder)
 
@@ -117,7 +117,7 @@ ggplot(df_calib, aes(
     inherit.aes = FALSE, size = 3
   ) +
   theme_classic() +
-  scale_y_continuous(lim = c(0.08, 0.45), breaks = seq(0.05, 0.45, 0.05)) +
+  scale_y_continuous(lim = c(0.065, 0.45), breaks = seq(0.05, 0.45, 0.05)) +
   theme(
     legend.position = "right",
     axis.text.x = element_text(margin = margin(5, 0, 10, 0, "pt")),
