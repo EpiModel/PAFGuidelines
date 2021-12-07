@@ -1,13 +1,14 @@
 # This pulls in the default `param` object and the trackers
 source("R/utils-params.R", local = TRUE)
-pkgload::load_all("../EpiModelHIV-p")
+# pkgload::load_all("../EpiModelHIV-p")
+library(EpiModelHIV)
 orig <- readRDS("out/est/restart.rds")
 
-nsteps <- 52 * 100
+nsteps <- 52 * 140
 
 control <- control_msm(
-  start = 60 * 52 + 1,
-  nsteps = 61 * 52 + 1 + nsteps, # one year for prep riskhist then nsteps
+  start = 125 * 52 + 1,
+  nsteps = 125 * 52 + 1 + nsteps, # one year for prep riskhist then nsteps
   nsims = 1,
   ncores = 1,
   save.nwstats = FALSE,
