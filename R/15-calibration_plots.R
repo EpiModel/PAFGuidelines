@@ -2,7 +2,7 @@ library(EpiModel)
 library(tidyverse)
 
 files_folder <- "out/remote_jobs/k-PAF_sti_incid25k/out" # where are the calibration files
-reprocess <- TRUE # set to TRUE to redo the file processing
+reprocess <- FALSE # set to TRUE to redo the file processing
 
 process_1batch <- function(file_name, out_dir) {
   sim <- readRDS(file_name)
@@ -113,7 +113,7 @@ ggplot(df_calib, aes(
   geom_line(size = 0.5) +
   geom_text(
     data = df_tgts,
-    aes(y = value + 0.01, color = name, label = value, x = 62),
+    aes(y = value + 0.01, color = name, label = value, x = 120),
     inherit.aes = FALSE, size = 3
   ) +
   theme_classic() +
@@ -174,11 +174,11 @@ ggplot(df_calib, aes(
   geom_line(size = 0.5) +
   geom_text(
     data = df_tgts,
-    aes(y = value + 0.04, color = name, label = value, x = 61),
+    aes(y = value + 0.04, color = name, label = value, x = 120),
     inherit.aes = FALSE, size = 2
   ) +
   theme_classic() +
-  scale_y_continuous(lim = c(0, 1), breaks = seq(0.0, 1, 0.1)) +
+  scale_y_continuous(lim = c(0.6, 1), breaks = seq(0.6, 1, 0.1)) +
   theme(
     legend.position = "right",
     axis.text.x = element_text(margin = margin(5, 0, 10, 0, "pt")),
@@ -235,7 +235,7 @@ ggplot(df_calib, aes(
   geom_line(size = 0.5) +
   geom_text(
     data = df_tgts,
-    aes(y = value + 0.01, color = name, label = value, x = 62),
+    aes(y = value + 0.01, color = name, label = value, x = 120),
     inherit.aes = FALSE, size = 3
   ) +
   theme_classic() +
@@ -296,7 +296,7 @@ ggplot(df_calib, aes(
   geom_line(size = 0.5) +
   geom_text(
     data = df_tgts,
-    aes(y = value + 0.01, color = name, label = value, x = 62),
+    aes(y = value + 0.01, color = name, label = value, x = 120),
     inherit.aes = FALSE, size = 3
   ) +
   theme_classic() +
@@ -356,7 +356,7 @@ ggplot(df_calib, aes(
   geom_line(size = 0.5) +
   geom_text(
     data = df_tgts,
-    aes(y = value + 0.01, color = name, label = value, x = 62),
+    aes(y = value + 0.01, color = name, label = value, x = 120),
     inherit.aes = FALSE, size = 3
   ) +
   theme_classic() +

@@ -60,7 +60,7 @@ relative_params <- list(
   }
 )
 
-# param_proposals <- list(base_params__ = TRUE)
+param_proposals <- list(base_params__ = TRUE)
 
 # Automatic --------------------------------------------------------------------
 

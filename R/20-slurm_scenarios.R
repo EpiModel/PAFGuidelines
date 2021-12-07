@@ -1,13 +1,13 @@
 source("R/utils-slurm_prep_helpers.R") # requires `purrr`
 source("R/utils-slurm_wf.R")
-test_simulation <- F
+test_simulation <- FALSE
 
 # Set slurm parameters ---------------------------------------------------------
 sim_per_batch <- 40    # How many simulation per bactch
 batch_per_set <- 25   # How many sim_per_batch replications to do per parameter
 steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "k-PAF_test"
+job_name <- "k-PAF_sc1"
 ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -17,8 +17,8 @@ slurm_resources <- list(
   job_name = job_name,
   account = if (partition == "csde") "csde" else "csde-ckpt",
   n_cpus = sim_per_batch,
-  memory = 5 * 1e3, # in Mb and PER CPU
-  walltime = 15
+  memory = 5 * 1024, # in Mb and PER CPU
+  walltime = 60
 )
 
 # Set orig, param, init, control -----------------------------------------------
@@ -29,8 +29,8 @@ source("R/utils-params.R", local = TRUE)
 orig <- readRDS("out/est/restart.rds")
 
 control <- control_msm(
-  start = 60 * 52 + 1,
-  nsteps = 80 * 52, # 60->65 rng; 65->70 calib2; 70->80 scenario
+  start = 125 * 52 + 1,
+  nsteps = 145 * 52, # 125->130 rng; 130->135 calib2; 135->145 scenario
   nsims = sim_per_batch,
   ncores = sim_per_batch,
   save.nwstats = FALSE,
@@ -44,11 +44,12 @@ control <- control_msm(
 source("R/utils-scenarios.R")
 
 # To subset scenarios:
+scenarios <- scenarios[1:(length(scenarios) %/% 2)]
+# scenarios <- scenarios[(length(scenarios) %/% 2 + 1):length(scenarios)]
+#
+# scenarios <- scenarios_no_sti_effect
 # scenarios <- scenarios[1:(length(scenarios) %/% 2)]
 # scenarios <- scenarios[(length(scenarios) %/% 2 + 1):length(scenarios)]
-scenarios <- scenarios_no_sti_effect
-# scenarios <- scenarios[1:(length(scenarios) %/% 2)]
-scenarios <- scenarios[(length(scenarios) %/% 2 + 1):length(scenarios)]
 
 # Automatic --------------------------------------------------------------------
 #
