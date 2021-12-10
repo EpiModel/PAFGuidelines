@@ -3,8 +3,10 @@ library(data.table)
 reprocess_all <- TRUE
 
 # One or many job_names
-job_names <- c("k-PAF_sc_sti1", "k-PAF_sc_sti2",
-               "k-PAF_sc_nosti1", "k-PAF_sc_nosti2")
+# job_names <- c("k-PAF_sc_sti1", "k-PAF_sc_sti2",
+#                "k-PAF_sc_nosti1", "k-PAF_sc_nosti2")
+job_names <- c("k-PAF_sc1", "k-PAF_scn1")
+
 job_last_n <- NULL # if not NULL, get last N jobs. Otherwise, use job_names
 
 if (!is.null(job_last_n))

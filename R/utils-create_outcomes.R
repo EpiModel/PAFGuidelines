@@ -104,8 +104,8 @@ make_outcomes <- function(baseline_file, scenarios_files,
     fle_nst <- paste0(stringr::str_sub(fle, 1, -5), "___no_sti_effect.rds")
 
     df_sc <- readRDS(fle)
-    df_nst <- readRDS(fle_nst)
-    df_nst <- df_nst %>%
+    df_nsti <- readRDS(fle_nst)
+    df_nst <- df_nsti %>%
       filter(time > max(time) - 52 * 10) %>%
       group_by(batch, sim) %>%
       summarise(
@@ -118,6 +118,19 @@ make_outcomes <- function(baseline_file, scenarios_files,
       ungroup() %>%
       summarise(across(-c(batch, sim), median))
 
+    # same but only last year
+    df_nst2 <- df_nsti %>%
+      filter(time > max(time) - 52) %>%
+      group_by(batch, sim) %>%
+      summarise(
+        cum_incid = sum(incid, na.rm = TRUE),
+        cum_incid_gc_hivpos = sum(incid.gc.hivpos, na.rm = TRUE),
+        cum_incid_gc_hivneg = sum(incid.gc.hivneg, na.rm = TRUE),
+        cum_incid_ct_hivpos = sum(incid.ct.hivpos, na.rm = TRUE),
+        cum_incid_ct_hivneg = sum(incid.ct.hivneg, na.rm = TRUE)
+      ) %>%
+      ungroup() %>%
+      summarise(across(-c(batch, sim), median))
     df_cur <- df_cur + 1
 
     # outcome cumulated over intervention (10y)
@@ -155,16 +168,18 @@ make_outcomes <- function(baseline_file, scenarios_files,
                   nia_ct,
         nnt_hiv_sti = (
           (test_ct_hivpos + test_ct_hivneg +
-           test_gc_hivpos + test_gc_hivneg)
+           test_gc_hivpos + test_gc_hivneg) -
           (dbc$test_ct_hivpos + dbc$test_ct_hivneg +
            dbc$test_gc_hivpos + dbc$test_gc_hivneg)
-        ) / nia,
+         ) / nia,
         cum_incid_diff = cum_incid - df_nst[["cum_incid"]][1],
         cum_incid_gc_hivpos_diff = cum_incid_gc_hivpos - df_nst[["cum_incid_gc_hivpos"]][1],
         cum_incid_gc_hivneg_diff = cum_incid_gc_hivneg - df_nst[["cum_incid_gc_hivneg"]][1],
         cum_incid_ct_hivpos_diff = cum_incid_ct_hivpos - df_nst[["cum_incid_ct_hivpos"]][1],
         cum_incid_ct_hivneg_diff = cum_incid_ct_hivneg - df_nst[["cum_incid_ct_hivneg"]][1],
         attributable_per_sti = cum_incid_diff / cum_incid_sti * 1000,
+        attributable_per_gc = cum_incid_diff / cum_incid_gc * 1000,
+        attributable_per_ct = cum_incid_diff / cum_incid_ct * 1000,
         perc_test_rsti = test_rsti / test_sti,
         perc_test_sti_pos = test_sti_pos / test_sti,
         perc_test_sti_hivpos = test_sti_hivpos / test_sti
@@ -176,15 +191,19 @@ make_outcomes <- function(baseline_file, scenarios_files,
       filter(time > max(time) - 52) %>%
       group_by(scenario, batch, sim) %>%
       summarise(
+        num = mean(num, na.rm = TRUE),
+        infections = sum(incid, na.rm = TRUE),
         ir100 = mean(incid / s___ALL * 5200, na.rm = TRUE),
         hiv_prev = mean(i___ALL / (i___ALL + s___ALL), na.rm = TRUE),
         hiv_diag = mean(i_dx___ALL / i___ALL, na.rm = TRUE),
         hiv_tx = mean(i_tx___ALL / i_dx___ALL, na.rm = TRUE),
         hiv_supp = mean(i_sup___ALL / i_dx___ALL, na.rm = TRUE),
         prep_cov = mean(s_prep___ALL / s_prep_elig___ALL, na.rm = TRUE),
+        infections_gc = sum(incid.gc.hivpos + incid.gc.hivneg, na.rm = TRUE),
         ir100_gc_hivpos = mean(incid.gc.hivpos / gc_s_hivpos___ALL * 5200, na.rm = TRUE),
         ir100_gc_hivneg = mean(incid.gc.hivneg / gc_s_hivneg___ALL * 5200, na.rm = TRUE),
         ir100_gc = ir100_gc_hivpos + ir100_gc_hivneg,
+        infections_ct = sum(incid.ct.hivpos + incid.ct.hivneg, na.rm = TRUE),
         ir100_ct_hivpos = mean(incid.ct.hivpos / ct_s_hivpos___ALL * 5200, na.rm = TRUE),
         ir100_ct_hivneg = mean(incid.ct.hivneg / ct_s_hivneg___ALL * 5200, na.rm = TRUE),
         ir100_ct = ir100_ct_hivpos + ir100_ct_hivneg,
@@ -197,9 +216,23 @@ make_outcomes <- function(baseline_file, scenarios_files,
       ) %>%
       ungroup()
 
+    df_at2 <- df_sc %>%
+      filter(time > max(time) - 52) %>%
+      group_by(scenario, batch, sim) %>%
+      cum_shared() %>%
+      mutate(
+        cum_incid_diff = cum_incid - df_nst2[["cum_incid"]][1],
+        ly_attributable_per_sti = cum_incid_diff / cum_incid_sti * 1000,
+        ly_attributable_per_gc = cum_incid_diff / cum_incid_gc * 1000,
+        ly_attributable_per_ct = cum_incid_diff / cum_incid_ct * 1000
+      ) %>%
+      select(scenario, batch, sim, starts_with("ly_")) %>%
+      ungroup()
+
     # binding of the dfs and formatting
     df_res <- df_cum %>%
-      left_join(df_at, by = c("scenario", "batch", "sim"))
+      left_join(df_at, by = c("scenario", "batch", "sim")) %>%
+      left_join(df_at2, by = c("scenario", "batch", "sim"))
 
     df_ls[[df_cur]] <- df_res
   }

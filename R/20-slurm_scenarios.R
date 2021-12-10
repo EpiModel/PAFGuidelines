@@ -7,7 +7,7 @@ sim_per_batch <- 40    # How many simulation per bactch
 batch_per_set <- 25   # How many sim_per_batch replications to do per parameter
 steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "k-PAF_sc1"
+job_name <- "k-PAF_sc2"
 ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -44,8 +44,8 @@ control <- control_msm(
 source("R/utils-scenarios.R")
 
 # To subset scenarios:
-scenarios <- scenarios[1:(length(scenarios) %/% 2)]
-# scenarios <- scenarios[(length(scenarios) %/% 2 + 1):length(scenarios)]
+# scenarios <- scenarios[1:(length(scenarios) %/% 2)]
+scenarios <- scenarios[(length(scenarios) %/% 2 + 1):length(scenarios)]
 #
 # scenarios <- scenarios_no_sti_effect
 # scenarios <- scenarios[1:(length(scenarios) %/% 2)]
