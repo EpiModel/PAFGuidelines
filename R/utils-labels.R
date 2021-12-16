@@ -126,7 +126,11 @@ names(fmts) <- names(var_labels)
 
 format_patterns <- list(
   small_num = list(
-    patterns = c("ir100", "attributable_per_sti"),
+    patterns = c(
+      "ir100",
+      "attributable_per_sti", "attributable_per_gc", "attributable_per_ct",
+      "ly_attributable_per_sti", "ly_attributable_per_gc", "ly_attributable_per_ct"
+    ),
     fun = scales::label_number(0.01)
   ),
   small_perc = list(

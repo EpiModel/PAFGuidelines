@@ -33,12 +33,12 @@ d_roll <- d %>%
       c(yl, y, yh),
       ~ right_roll(.x)
   )) %>%
-  filter(time > 52 * 65)
+  filter(time > 52 * 130)
 
 
 ggplot(d_roll, aes(x = time / 52, y = y, ymin = yl, ymax = yh,
                    col = scenario, fill = scenario)) +
-  geom_vline(xintercept = 70 + 1/52, col = "gray") +
+  geom_vline(xintercept = 135 + 1/52, col = "gray") +
   geom_ribbon(alpha = 0.1, linetype = "blank") +
   geom_line() +
   facet_grid(cols = vars(name)) +

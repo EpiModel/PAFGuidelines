@@ -50,7 +50,7 @@ netstats <- readRDS("out/est/netstats.rds")
 epistats <- readRDS("out/est/epistats.rds")
 
 full_tx_eff <- rep(1, 3)
-prep_start_time <- 52 * 125 + 1
+prep_start_time <- 52 * 130 + 1
 prep_start_prob <- rep(0.31, 3)
 
 param <- param_msm(

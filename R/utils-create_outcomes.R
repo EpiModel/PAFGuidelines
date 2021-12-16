@@ -202,11 +202,11 @@ make_outcomes <- function(baseline_file, scenarios_files,
         infections_gc = sum(incid.gc.hivpos + incid.gc.hivneg, na.rm = TRUE),
         ir100_gc_hivpos = mean(incid.gc.hivpos / gc_s_hivpos___ALL * 5200, na.rm = TRUE),
         ir100_gc_hivneg = mean(incid.gc.hivneg / gc_s_hivneg___ALL * 5200, na.rm = TRUE),
-        ir100_gc = ir100_gc_hivpos + ir100_gc_hivneg,
+        ir100_gc = mean(incid.gc / (gc_s_hivpos___ALL + gc_s_hivneg___ALL) * 5200, na.rm = TRUE),
         infections_ct = sum(incid.ct.hivpos + incid.ct.hivneg, na.rm = TRUE),
         ir100_ct_hivpos = mean(incid.ct.hivpos / ct_s_hivpos___ALL * 5200, na.rm = TRUE),
         ir100_ct_hivneg = mean(incid.ct.hivneg / ct_s_hivneg___ALL * 5200, na.rm = TRUE),
-        ir100_ct = ir100_ct_hivpos + ir100_ct_hivneg,
+        ir100_ct = mean(incid.ct / (ct_s_hivpos___ALL + ct_s_hivneg___ALL) * 5200, na.rm = TRUE),
         gc_prev_hivpos = mean(gc_i_hivpos___ALL / (gc_i_hivpos___ALL + gc_s_hivpos___ALL), na.rm = TRUE),
         gc_prev_hivneg = mean(gc_i_hivneg___ALL / (gc_i_hivneg___ALL + gc_s_hivneg___ALL), na.rm = TRUE),
         gc_prev = gc_prev_hivpos + gc_prev_hivneg,
@@ -282,7 +282,13 @@ make_table <- function(df_res, ql = 0.025, qm = 0.5, qh = 0.975) {
   df_out <- df_out[, c("scenario", var_labels)] %>%
     select(-starts_with("__ignore__"))
 
-  left_join(data.frame(scenario = scenarios), df_out, by = "scenario")
+  df_out <- left_join(data.frame(scenario = scenarios), df_out, by = "scenario")
+
+  nms <- names(df_out)
+  nms <- grepl("NIA|NNT|PIA", nms)
+  df_out[1, nms] <- "-"
+
+  df_out
 }
 
 

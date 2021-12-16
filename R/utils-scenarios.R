@@ -1,4 +1,4 @@
-scenarios_update_time <- 52 * 140 + 1
+scenarios_update_time <- 52 * 135 + 1
 d_scenarios <- read.csv("in/scenarios.csv")
 
 ## Example scenario data.frame
