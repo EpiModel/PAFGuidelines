@@ -141,7 +141,7 @@ make_outcomes <- function(baseline_file, scenarios_files,
       mutate(
         nia = (dbc$cum_incid - cum_incid),
         pia = nia / dbc$cum_incid,
-        nnt = ( test_hiv - dbc$test_hiv ) / nia,
+        nnt = (test_hiv - dbc$test_hiv) / nia,
         nia_gc_hivpos = (dbc$cum_incid_gc_hivpos - cum_incid_gc_hivpos),
         pia_gc_hivpos = nia_gc_hivpos / dbc$cum_incid_gc_hivpos,
         nnt_gc_hivpos = (test_gc_hivpos - dbc$test_gc_hivpos) / nia_gc_hivpos,
