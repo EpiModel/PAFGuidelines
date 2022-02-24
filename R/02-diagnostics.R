@@ -45,7 +45,6 @@ print(dx_main_static, digits = 1)
 
 plot(dx_main)
 
-
 # Casual ------------------------------------------------------------------
 
 fit_casl <- est[[2]]

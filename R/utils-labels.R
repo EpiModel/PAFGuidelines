@@ -117,7 +117,11 @@ var_labels <- c(
 
   "perc_test_rsti"          = "Proportion of rectal tests",
   "perc_test_sti_pos"       = "Proportion of positive tests",
-  "perc_test_sti_hivpos"    = "Proportion of HIV positive STI tests"
+  "perc_test_sti_hivpos"    = "Proportion of HIV positive STI tests",
+
+  "sti_screening_ep_tot"    = "Screening episodes (total)",
+  "sti_screening_ep_hivneg" = "Screening episodes (HIV negative)",
+  "sti_screening_ep_hivpos" = "Screening episodes (HIV positive)"
 )
 
 # Formatters for the variables

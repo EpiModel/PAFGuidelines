@@ -392,7 +392,9 @@ make_yearly_outcomes <- function(scenarios_files, scenarios_order = NULL) {
         test_uct_hivneg     = sum(uct.tot.test.hivneg, na.rm = TRUE),
         test_rct_hivneg     = sum(rct.tot.test.hivneg, na.rm = TRUE),
         test_uct_pos_hivneg = sum(uct.pos.test.hivneg, na.rm = TRUE),
-        test_rct_pos_hivneg = sum(rct.pos.test.hivneg, na.rm = TRUE)
+        test_rct_pos_hivneg = sum(rct.pos.test.hivneg, na.rm = TRUE),
+        sti_screening_ep_hivpos = sum(sti.screening.ep.hivpos, na.rm = TRUE),
+        sti_screening_ep_hivneg = sum(sti.screening.ep.hivneg, na.rm = TRUE)
       ) %>%
       mutate(
         cum_incid_gc         = cum_incid_gc_hivpos + cum_incid_gc_hivneg,
@@ -435,7 +437,9 @@ make_yearly_outcomes <- function(scenarios_files, scenarios_order = NULL) {
 
         perc_test_rsti       = test_rsti / test_sti,
         perc_test_sti_pos    = test_sti_pos / test_sti,
-        perc_test_sti_hivpos = test_sti_hivpos / test_sti
+        perc_test_sti_hivpos = test_sti_hivpos / test_sti,
+
+        sti_screening_ep_tot = sti_screening_ep_hivneg + sti_screening_ep_hivpos
       ) %>%
       ungroup()
 
