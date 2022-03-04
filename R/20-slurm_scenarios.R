@@ -2,20 +2,22 @@ source("R/utils-slurm_prep_helpers.R") # requires `purrr`
 source("R/utils-slurm_wf.R")
 test_simulation <- FALSE
 
+set_n <- 6
+
 # Set slurm parameters ---------------------------------------------------------
-sim_per_batch <- 40    # How many simulation per bactch
-batch_per_set <- 25   # How many sim_per_batch replications to do per parameter
+sim_per_batch <- 32 # 40    # How many simulation per bactch
+batch_per_set <- ceiling(1000 / sim_per_batch)   # How many sim_per_batch replications to do per parameter
 steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
-partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "k-PAF_scn2"
-ssh_host <- "hyak_klone"
-ssh_dir <- "gscratch/PAFGuidelines/"
+partition <- "preemptable" #"ckpt"     # On hyak, either ckpt or csde
+job_name <- paste0("PAF_sc", set_n) #"k-PAF_scn2"
+ssh_host <- "rsph" # "hyak_klone"
+ssh_dir <- "projects/PAFGuidelines" # "gscratch/PAFGuidelines/"
 
 # Options passed to slurm_wf
 slurm_resources <- list(
   partition = partition,
   job_name = job_name,
-  account = if (partition == "csde") "csde" else "csde-ckpt",
+  # account = if (partition == "csde") "csde" else "csde-ckpt",
   n_cpus = sim_per_batch,
   memory = 5 * 1024, # in Mb and PER CPU
   walltime = 60
@@ -42,14 +44,25 @@ control <- control_msm(
 # Scenarios --------------------------------------------------------------------
 # requires <list variables>
 source("R/utils-scenarios.R")
+borders <- round(seq(1, length(scenarios), length.out = 4))
 
 # To subset scenarios:
-# scenarios <- scenarios[1:(length(scenarios) %/% 2)]
-# scenarios <- scenarios[(length(scenarios) %/% 2 + 1):length(scenarios)]
-#
-scenarios <- scenarios_no_sti_effect
-# scenarios <- scenarios[1:(length(scenarios) %/% 2)]
-scenarios <- scenarios[(length(scenarios) %/% 2 + 1):length(scenarios)]
+if (set_n == 1) {
+  scenarios <- scenarios[borders[1]:borders[2]]
+} else if (set_n == 2) {
+  scenarios <- scenarios[(borders[2] + 1):borders[3]]
+} else if (set_n == 3) {
+  scenarios <- scenarios[(borders[3] + 1):borders[4]]
+} else if (set_n == 4) {
+  scenarios <- scenarios_no_sti_effect
+  scenarios <- scenarios[borders[1]:borders[2]]
+} else if (set_n == 5) {
+  scenarios <- scenarios_no_sti_effect
+  scenarios <- scenarios[(borders[2] + 1):borders[3]]
+} else if (set_n == 6) {
+  scenarios <- scenarios_no_sti_effect
+  scenarios <- scenarios[(borders[3] + 1):borders[4]]
+}
 
 # Automatic --------------------------------------------------------------------
 #
