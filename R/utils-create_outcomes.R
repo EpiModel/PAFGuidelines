@@ -86,7 +86,9 @@ make_outcomes <- function(baseline_file, scenarios_files,
         test_sti = test_sti_hivneg + test_sti_hivpos,
         test_sti_pos_hivpos = test_rsti_pos_hivpos + test_usti_pos_hivpos,
         test_sti_pos_hivneg = test_rsti_pos_hivneg + test_usti_pos_hivneg,
-        test_sti_pos = test_sti_pos_hivneg + test_sti_pos_hivpos
+        test_sti_pos = test_sti_pos_hivneg + test_sti_pos_hivpos,
+
+
       )
   }
 
@@ -279,6 +281,7 @@ make_table <- function(df_res, ql = 0.025, qm = 0.5, qh = 0.975) {
 
   df_out <- left_join(df_out, df_res, scenario = scenario)
 
+  var_labels <- var_labels[var_labels %in% colnames(df_out)]
   df_out <- df_out[, c("scenario", var_labels)] %>%
     select(-starts_with("__ignore__"))
 
@@ -394,7 +397,19 @@ make_yearly_outcomes <- function(scenarios_files, scenarios_order = NULL) {
         test_uct_pos_hivneg = sum(uct.pos.test.hivneg, na.rm = TRUE),
         test_rct_pos_hivneg = sum(rct.pos.test.hivneg, na.rm = TRUE),
         sti_screening_ep_hivpos = sum(sti.screening.ep.hivpos, na.rm = TRUE),
-        sti_screening_ep_hivneg = sum(sti.screening.ep.hivneg, na.rm = TRUE)
+        sti_screening_ep_hivneg = sum(sti.screening.ep.hivneg, na.rm = TRUE),
+        sti_screening_ep_prep = sum(sti.screening.ep.prep, na.rm = TRUE),
+
+        ct_tx_sympt_hivpos = sum(ct.tx.sympt.hivpos, na.rm = TRUE),
+        ct_tx_sympt_hivneg = sum(ct.tx.sympt.hivneg, na.rm = TRUE),
+        ct_tx_asympt_hivpos = sum(ct.tx.asympt.hivpos, na.rm = TRUE),
+        ct_tx_asympt_hivneg = sum(ct.tx.asympt.hivneg, na.rm = TRUE),
+        ct_tx_prep = sum(ct.tx.prep, na.rm = TRUE),
+        gc_tx_sympt_hivpos = sum(gc.tx.sympt.hivpos, na.rm = TRUE),
+        gc_tx_sympt_hivneg = sum(gc.tx.sympt.hivneg, na.rm = TRUE),
+        gc_tx_asympt_hivpos = sum(gc.tx.asympt.hivpos, na.rm = TRUE),
+        gc_tx_asympt_hivneg = sum(gc.tx.asympt.hivneg, na.rm = TRUE),
+        gc_tx_prep = sum(gc.tx.prep, na.rm = TRUE)
       ) %>%
       mutate(
         cum_incid_gc         = cum_incid_gc_hivpos + cum_incid_gc_hivneg,

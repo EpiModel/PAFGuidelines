@@ -121,7 +121,19 @@ var_labels <- c(
 
   "sti_screening_ep_tot"    = "Screening episodes (total)",
   "sti_screening_ep_hivneg" = "Screening episodes (HIV negative)",
-  "sti_screening_ep_hivpos" = "Screening episodes (HIV positive)"
+  "sti_screening_ep_hivpos" = "Screening episodes (HIV positive)",
+  "sti_screening_ep_prep"   = "Screening episodes (PrEP)",
+
+  "ct_tx_sympt_hivpos"  = "CT treatment episodes (Sympotmatique HIV+)",
+  "ct_tx_sympt_hivneg"  = "CT treatment episodes (Sympotmatique HIV-)",
+  "ct_tx_asympt_hivpos" = "CT treatment episodes (Asympotmatique HIV+)",
+  "ct_tx_asympt_hivneg" = "CT treatment episodes (Asympotmatique HIV-)",
+  "ct_tx_prep"          = "CT treatment episodes (PrEP)",
+  "gc_tx_sympt_hivpos"  = "GC treatment episodes (Sympotmatique HIV+)",
+  "gc_tx_sympt_hivneg"  = "GC treatment episodes (Sympotmatique HIV-)",
+  "gc_tx_asympt_hivpos" = "GC treatment episodes (Asympotmatique HIV+)",
+  "gc_tx_asympt_hivneg" = "GC treatment episodes (Asympotmatique HIV-)",
+  "gc_tx_prep"          = "GC treatment episodes (PrEP)"
 )
 
 # Formatters for the variables
