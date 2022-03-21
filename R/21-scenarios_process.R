@@ -54,6 +54,8 @@ needed_cols <- c(
 for (job in job_names) {
   infos <- readRDS(fs::path("out/remote_jobs/", job, "job_info.rds"))
   out_dir <- fs::path(infos$paths$local_job_dir, "out")
+  if (!fs::dir_exists(out_dir)) fs::dir_create(out_dir)
+
 
   sim_files <- fs::dir_ls(out_dir, regexp = "\\d*.rds")
   for (fle in sim_files) {
