@@ -1,3 +1,4 @@
+library(EpiModel)
 library(data.table)
 
 reprocess_all <- TRUE
