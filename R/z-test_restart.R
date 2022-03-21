@@ -50,7 +50,7 @@ d <- d_sim %>%
 glimpse(d)
 
 d %>%
-  select(starts_with("ct."), starts_with("sti.")) %>%
+  select(starts_with("gc."), starts_with("ct."), starts_with("sti.")) %>%
   glimpse()
 
 d %>%

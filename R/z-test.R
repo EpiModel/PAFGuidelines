@@ -60,3 +60,7 @@ for (ll in lst) {
     print(ll)
   }
 }
+
+d <- as_tibble(readRDS("out/scenarios/t2_7019.rds"))
+
+names(d)
