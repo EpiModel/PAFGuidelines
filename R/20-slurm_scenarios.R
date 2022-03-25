@@ -5,13 +5,13 @@ test_simulation <- FALSE
 set_n <- 6
 
 # Set slurm parameters ---------------------------------------------------------
-sim_per_batch <- 32 # 40    # How many simulation per bactch
+sim_per_batch <- 40    # How many simulation per bactch
 batch_per_set <- ceiling(1000 / sim_per_batch)   # How many sim_per_batch replications to do per parameter
-steps_to_keep <- NULL # 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
-partition <- "preemptable" #"ckpt"     # On hyak, either ckpt or csde
+steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
+partition <- "ckpt" # "preemptable" #"ckpt"     # On hyak, either ckpt or csde
 job_name <- paste0("PAF_sc", set_n) #"k-PAF_scn2"
-ssh_host <- "rsph" # "hyak_klone"
-ssh_dir <- "projects/PAFGuidelines" # "gscratch/PAFGuidelines/"
+ssh_host <- "hyak_klone" # "rsph" # "hyak_klone"
+ssh_dir <- "gscratch/PAFGuidelines/" # "projects/PAFGuidelines"
 
 # for rsph: need to remouve "account" in the "slurm/job_scripts/blah.sh"
 
@@ -19,7 +19,7 @@ ssh_dir <- "projects/PAFGuidelines" # "gscratch/PAFGuidelines/"
 slurm_resources <- list(
   partition = partition,
   job_name = job_name,
-  # account = if (partition == "csde") "csde" else "csde-ckpt",
+  account = if (partition == "csde") "csde" else "csde-ckpt",
   n_cpus = sim_per_batch,
   memory = 5 * 1024, # in Mb and PER CPU
   walltime = 60

@@ -53,10 +53,10 @@ run_netsim_fun <- function(param_proposal, sim_num,
     df <- as.data.frame(sim)
     df <- df[df$time > max(df$time) - info$df_keep, ]
     saveRDS(df, paste0(info$root_dir, "/out/", prefix, "sim", sim_num, ".rds"),
-            compress = "xz")
+            compress = TRUE)
   } else {
     saveRDS(sim, paste0(info$root_dir, "/out/", prefix, "sim", sim_num, ".rds"),
-            compress = "xz")
+            compress = TRUE)
   }
 }
 
@@ -74,10 +74,10 @@ run_netsim_updaters_fun <- function(updaters, sim_num, scenario,
     df <- df[df$time > max(df$time) - info$df_keep, ]
     df$scenario <- scenario
     saveRDS(df, paste0(info$root_dir, "/out/", prefix, "sim", sim_num, ".rds"),
-            compress = "xz")
+            compress = TRUE)
   } else {
     saveRDS(sim, paste0(info$root_dir, "/out/", prefix, "sim", sim_num, ".rds"),
-            compress = "xz")
+            compress = TRUE)
   }
 }
 

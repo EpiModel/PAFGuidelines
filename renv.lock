@@ -69,9 +69,9 @@
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "EpiModelHIV-p",
       "RemoteRef": "PAFGuidelines",
-      "RemoteSha": "582cddbb46b5d25c71eccb303e9caee534dbce7b",
+      "RemoteSha": "1a5a848226fd33112bc802d4471eacde25eff56e",
       "RemoteHost": "api.github.com",
-      "Hash": "455d15a77d785db43884229cd2cadbc0"
+      "Hash": "d12ab9c37cb8b43e698e4d9fa3c73650"
     },
     "EpiModelHPC": {
       "Package": "EpiModelHPC",
@@ -399,6 +399,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "7bf6fbed7f00cae876901fd70c04f3a4"
+    },
+    "future.apply": {
+      "Package": "future.apply",
+      "Version": "1.8.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f568ce73d3d59582b0f7babd0eb33d07"
     },
     "gargle": {
       "Package": "gargle",

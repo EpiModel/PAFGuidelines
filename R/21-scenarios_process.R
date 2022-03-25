@@ -1,5 +1,8 @@
 library(EpiModel)
 library(data.table)
+library(future.apply)
+
+plan(multicore, workers = 16)
 
 reprocess_all <- TRUE
 
@@ -52,12 +55,13 @@ needed_cols <- c(
   needed_trackers
 )
 
-for (job in job_names) {
+# for (job in job_names) {
+future_lapply(job_names, function(job) {
+
   infos <- readRDS(fs::path("out/remote_jobs/", job, "job_info.rds"))
   out_dir <- fs::path(infos$paths$local_job_dir, "out")
   # on HPC
   out_dir <- fs::path(infos$paths$local_job_dir, "slurm", "out")
-
 
   sim_files <- fs::dir_ls(out_dir, regexp = "\\d*.rds")
   for (fle in sim_files) {
@@ -77,11 +81,11 @@ for (job in job_names) {
       keep_cols <- intersect(needed_cols, names(dff))
       dff <- dff[, ..keep_cols]
 
-
       saveRDS(dff, fs::path(sim_dir, paste0(job, "-", btch, ".rds")))
     }
   }
-}
+})
+# }
 
 scenario_dir <- "out/parts/scenarios"
 if (!fs::dir_exists(scenario_dir))
