@@ -2,14 +2,14 @@ source("R/utils-slurm_prep_helpers.R") # requires `purrr`
 source("R/utils-slurm_wf.R")
 test_simulation <- FALSE
 
-set_n <- 6
+set_n <- 5
 
 # Set slurm parameters ---------------------------------------------------------
 sim_per_batch <- 40    # How many simulation per bactch
 batch_per_set <- ceiling(1000 / sim_per_batch)   # How many sim_per_batch replications to do per parameter
 steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt" # "preemptable" #"ckpt"     # On hyak, either ckpt or csde
-job_name <- paste0("PAF_sc", set_n) #"k-PAF_scn2"
+job_name <- paste0("kPAF_sc", set_n) #"k-PAF_scn2"
 ssh_host <- "hyak_klone" # "rsph" # "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/" # "projects/PAFGuidelines"
 

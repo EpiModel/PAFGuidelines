@@ -2,14 +2,14 @@ library(EpiModel)
 library(data.table)
 library(future.apply)
 
-plan(multicore, workers = 16)
+plan(multicore, workers = 2)
 
 reprocess_all <- TRUE
 
 # One or many job_names
 # job_names <- c("k-PAF_sc_sti1", "k-PAF_sc_sti2",
 #                "k-PAF_sc_nosti1", "k-PAF_sc_nosti2")
-job_names <- c("PAF_sc1", "PAF_sc2", "PAF_sc3", "PAF_sc4", "PAF_sc5", "PAF_sc6")
+job_names <- c("kPAF_sc1", "kPAF_sc2", "kPAF_sc3", "kPAF_sc4", "kPAF_sc5", "kPAF_sc6")
 
 job_last_n <- NULL # if not NULL, get last N jobs. Otherwise, use job_names
 
@@ -61,7 +61,7 @@ future_lapply(job_names, function(job) {
   infos <- readRDS(fs::path("out/remote_jobs/", job, "job_info.rds"))
   out_dir <- fs::path(infos$paths$local_job_dir, "out")
   # on HPC
-  out_dir <- fs::path(infos$paths$local_job_dir, "slurm", "out")
+  # out_dir <- fs::path(infos$paths$local_job_dir, "slurm", "out")
 
   sim_files <- fs::dir_ls(out_dir, regexp = "\\d*.rds")
   for (fle in sim_files) {
@@ -81,7 +81,7 @@ future_lapply(job_names, function(job) {
       keep_cols <- intersect(needed_cols, names(dff))
       dff <- dff[, ..keep_cols]
 
-      saveRDS(dff, fs::path(sim_dir, paste0(job, "-", btch, ".rds")))
+      saveRDS(dff, fs::path(sim_dir, paste0(job, "-", btch, ".rds")), compress = FALSE)
     }
   }
 })
@@ -104,5 +104,5 @@ for (sc in scenarios) {
 
   dfs <- rbindlist(df_ls, fill = TRUE)[, scenario := scenario_name]
 
-  saveRDS(dfs, fs::path("out/scenarios", paste0(scenario_name, ".rds")))
+  saveRDS(dfs, fs::path("out/scenarios", paste0(scenario_name, ".rds")), compress = F)
 }
