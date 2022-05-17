@@ -1,6 +1,6 @@
 # This pulls in the default `param` object and the trackers
 source("R/utils-params.R", local = TRUE)
-pkgload::load_all("../EMPAF")
+pkgload::load_all("../EpiModelHIV-pEMPAF")
 # library(EpiModelHIV)
 orig <- readRDS("out/est/restart.rds")
 
