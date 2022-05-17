@@ -9,7 +9,8 @@ reprocess_all <- TRUE
 # One or many job_names
 # job_names <- c("k-PAF_sc_sti1", "k-PAF_sc_sti2",
 #                "k-PAF_sc_nosti1", "k-PAF_sc_nosti2")
-job_names <- c("kPAF_sc1", "kPAF_sc2", "kPAF_sc3", "kPAF_sc4", "kPAF_sc5", "kPAF_sc6")
+# job_names <- c("kPAF_sc1", "kPAF_sc2", "kPAF_sc3", "kPAF_sc4", "kPAF_sc5", "kPAF_sc6")
+job_names <- c("PAF_sc1")
 
 job_last_n <- NULL # if not NULL, get last N jobs. Otherwise, use job_names
 
