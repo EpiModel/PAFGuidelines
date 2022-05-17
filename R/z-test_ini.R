@@ -18,8 +18,8 @@ nsteps <- 52 * 15
 control <- control_msm(
   start = 60 * 52 + 1,
   nsteps = 61 * 52 + 1 + nsteps, # one year for prep riskhist then nsteps
-  nsims = 15,
-  ncores = 5,
+  nsims = 2,
+  ncores = 2,
   save.nwstats = FALSE,
   initialize.FUN = reinit_msm,
   save.clin.hist = FALSE,
@@ -27,6 +27,7 @@ control <- control_msm(
   raw_output = FALSE
 )
 
+# class(control) <- c(class(control), "control.list")
 sim <- netsim(orig, param, init, control)
 
 library(tidyverse)
