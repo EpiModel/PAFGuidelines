@@ -1,4 +1,5 @@
 source("R/utils-params.R", local = TRUE)
+param$epi_trackers <- restart_trackers
 
 # nsteps <- 52 * 15
 
@@ -13,15 +14,11 @@ source("R/utils-params.R", local = TRUE)
 #   raw_output = FALSE
 # )
 
-orig <- readRDS("out/est/restart.rds")
-nsteps <- 52 * 15
 control <- control_msm(
-  start = 60 * 52 + 1,
-  nsteps = 61 * 52 + 1 + nsteps, # one year for prep riskhist then nsteps
+  nsteps = 125 * 52,
   nsims = 2,
   ncores = 2,
   save.nwstats = FALSE,
-  initialize.FUN = reinit_msm,
   save.clin.hist = FALSE,
   verbose = FALSE,
   raw_output = FALSE
@@ -60,11 +57,9 @@ df <- df_b %>%
   )
 
 df_b %>%
-  filter(time > 52 * 65) %>%
   mutate(
-    prep = (s_prep___B + s_prep___H + s_prep___W) /
-           (s_prep_elig___B + s_prep_elig___H + s_prep_elig___W)
+    y = incid.gc / (gc_s___B + gc_s___H + gc_s___W) * 5200,
+    sim = as.character(sim)
   ) %>%
-  ggplot(aes(x = time / 52, y = prep)) +
-  geom_smooth() +
-  scale_y_continuous(breaks = seq(0, 0.2, length.out = 5))
+  ggplot(aes(x = time / 52, y = y, col = sim)) +
+  geom_smooth()

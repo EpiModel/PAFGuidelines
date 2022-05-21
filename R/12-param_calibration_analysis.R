@@ -65,7 +65,7 @@ df %>%
 df %>%
   select(param_batch, starts_with("i.prev.dx"))
 
-good_params <- c(3, 5)
+good_params <- c(2:3)
 
 param_proposals[good_params]
 

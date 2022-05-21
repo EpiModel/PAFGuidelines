@@ -5,7 +5,7 @@ library(tidyr)
 library(EpiModel)
 
 # One or many job_names
-job_names <- "k-PAF_sti_incid25k"
+job_names <- "PAF_calib_sti2"
 job_last_n <- NULL # if not NULL, get last N jobs. Otherwise, use job_names
 
 if (!is.null(job_last_n))

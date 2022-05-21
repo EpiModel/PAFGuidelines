@@ -5,11 +5,19 @@ test_all_combination <- FALSE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
 sim_per_batch <- 40    # How many simulation per bactch
-batch_per_set <- 10    # How many sim_per_batch replications to do per parameter
+batch_per_set <- 5    # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "k-PAF_sti_incid25k"
+job_name <- "k-PAF_calib_sti3"
 ssh_host <- "hyak_klone"
+ssh_dir <- "gscratch/PAFGuidelines/"
+
+sim_per_batch <- 28    # How many simulation per bactch
+batch_per_set <- 8    # How many sim_per_batch replications to do per parameter
+steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
+partition <- "ckpt"     # On hyak, either ckpt or csde
+job_name <- "PAF_calib_sti3"
+ssh_host <- "hyak_mox"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
 # Options passed to slurm_wf
@@ -39,8 +47,8 @@ control <- control_msm(
 # Parameters to test -----------------------------------------------------------
 #
 param_proposals <- list(
-  uct.tprob = as.list(seq(0.129, 0.1335, length.out = 5)),
-  ugc.tprob = as.list(seq(0.19, 0.203, length.out = 5))
+  uct.tprob = as.list(seq(0.085, 0.09, length.out = 5)),
+  ugc.tprob = as.list(seq(0.18125, 0.1875, length.out = 5))
 )
 
 # Make some additional changes to param_proposals using the present values
@@ -60,7 +68,7 @@ relative_params <- list(
   }
 )
 
-param_proposals <- list(base_params__ = TRUE)
+# param_proposals <- list(base_params__ = TRUE)
 
 # Automatic --------------------------------------------------------------------
 
@@ -150,4 +158,4 @@ writeLines(scp_send_script, fs::path(paths$local_job_dir, "send_to_ssh.sh"))
 writeLines(scp_get_script, fs::path(paths$local_job_dir, "get_from_ssh.sh"))
 
 write(job_name, file = fs::path(paths$local_out, paths$jobs_dir, "last_jobs"),
-      append = TRUE)
+     append = TRUE)

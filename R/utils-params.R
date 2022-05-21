@@ -1,5 +1,5 @@
-# library(EpiModelHIV)
-pkgload::load_all("../EMPAF")
+library(EpiModelHIV)
+# pkgload::load_all("../EMPAF")
 
 # Epi Trackers
 source("R/utils-epi_trackers.R")

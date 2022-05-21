@@ -370,7 +370,7 @@ make_yearly_outcomes <- function(scenarios_files, scenarios_order = NULL) {
     # outcome cumulated over intervention (10y)
     df_cum <- df_sc %>%
       filter(time > max(time) - 52 * 10) %>%
-      mutate(year = (time - 1) %/% 52 - 69) %>% # year of interv (1 to 10)
+      mutate(year = (time - 1) %/% 52 - 134) %>% # year of interv (1 to 10)
       group_by(scenario, year, batch, sim) %>%
       summarise(
         cum_incid           = sum(incid, na.rm = TRUE),
