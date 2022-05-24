@@ -13,10 +13,10 @@ ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
 sim_per_batch <- 28    # How many simulation per bactch
-batch_per_set <- 8    # How many sim_per_batch replications to do per parameter
+batch_per_set <- 16    # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_calib_sti3"
+job_name <- "PAF_calib_scale1"
 ssh_host <- "hyak_mox"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -45,29 +45,14 @@ control <- control_msm(
 )
 
 # Parameters to test -----------------------------------------------------------
-#
 param_proposals <- list(
-  uct.tprob = as.list(seq(0.085, 0.09, length.out = 5)),
-  ugc.tprob = as.list(seq(0.18125, 0.1875, length.out = 5))
+  trans.scale = seq_cross( # 4^3 values to test; See utils-slurm_prep_helpers.R
+    c(2.33, 0.35, 0.25),
+    c(2.53, 0.4, 0.275),
+    length.out = 4
+  )
 )
-
-# Make some additional changes to param_proposals using the present values
-# must return NULL if the required elements are NULL
-relative_params <- list(
-  rgc.tprob = function(param) {
-    out <- NULL
-    if (!is.null(param$ugc.tprob))
-      out <- plogis(qlogis(param$ugc.tprob) + log(1.5))
-    out
-  },
-  rct.tprob = function(param) {
-    out <- NULL
-    if (!is.null(param$uct.tprob))
-      out <- plogis(qlogis(param$uct.tprob) + log(1.5))
-    out
-  }
-)
-
+# c(2.53, 0.40, 0.275)
 # param_proposals <- list(base_params__ = TRUE)
 
 # Automatic --------------------------------------------------------------------
