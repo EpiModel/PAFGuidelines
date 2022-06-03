@@ -10,7 +10,7 @@ reprocess_all <- TRUE
 # job_names <- c("k-PAF_sc_sti1", "k-PAF_sc_sti2",
 #                "k-PAF_sc_nosti1", "k-PAF_sc_nosti2")
 # job_names <- c("kPAF_sc1", "kPAF_sc2", "kPAF_sc3", "kPAF_sc4", "kPAF_sc5", "kPAF_sc6")
-job_names <- paste0("PAF_sc", 1:6)
+job_names <- paste0(c("", "k"), "PAF_sc", rep(1:6, each = 2))
 
 job_last_n <- NULL # if not NULL, get last N jobs. Otherwise, use job_names
 
@@ -77,7 +77,7 @@ future_lapply(job_names, function(job) {
       sim <- readRDS(fle)
       dff <- as.data.table(sim)
 
-      dff[, `:=`(batch = btch, scenario = scenario_name)]
+      dff[, `:=`(batch = paste0(job, "-", btch), scenario = scenario_name)]
 
       keep_cols <- intersect(needed_cols, names(dff))
       dff <- dff[, ..keep_cols]

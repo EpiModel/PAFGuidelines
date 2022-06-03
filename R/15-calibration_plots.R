@@ -1,8 +1,11 @@
 library(EpiModel)
 library(tidyverse)
 
-files_folder <- "out/remote_jobs/k-PAF_sti_incid25k/out" # where are the calibration files
-reprocess <- FALSE # set to TRUE to redo the file processing
+files_folder <- c(# where are the calibration files
+  "out/remote_jobs/kPAF_restart/out",
+  "out/remote_jobs/PAF_restart/out"
+  )
+reprocess <- TRUE # set to TRUE to redo the file processing
 
 process_1batch <- function(file_name, out_dir) {
   sim <- readRDS(file_name)
@@ -40,6 +43,8 @@ process_1batch <- function(file_name, out_dir) {
 }
 
 dir_part <- "out/part_dfs"
+if(!fs::dir_exists(dir_part)) fs::dir_create(dir_part, recursive = TRUE)
+
 if (reprocess) {
   future::plan(future::multicore, workers = 2)
 

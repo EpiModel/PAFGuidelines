@@ -3,7 +3,7 @@ library(data.table)
 library(dplyr)
 
 # One or many job_names
-job_names <- c("k-PAF_sti_incid25k")
+job_names <- c("PAF_restart", "kPAF_restart")
 jobs <- list()
 
 # Read targets
@@ -38,6 +38,8 @@ for (job in job_names) {
 
   for (fle in sim_files) {
     btch <- as.numeric(stringr::str_extract(fs::path_file(fle), "\\d+"))
+    # # Multi Jobs
+    # btch <- paste0(job, btch)
     sim <- readRDS(fle)
     dff <- as.data.table(sim)
     dff[, `:=`(batch = btch)]
@@ -52,6 +54,8 @@ for (job in job_names) {
 }
 
 df_b <- jobs[[1]]$data
+# # multi jobs
+# df_b <- bind_rows(jobs[[1]]$data, jobs[[2]]$data)
 
 saveRDS(df_b, "out/restart_chooser.rds")
 
@@ -98,9 +102,18 @@ as.list(df[min_ind, ]) # check STI values (not in calculation) gc:12.9, ct:15.1
 df[min_ind, 1:2]
 
 # Best == batch37 sim7
+## multi jobs
+# job <- "PAF_restart"
+# batch <- 66
+# sim_no <- 12
+# rs_path <- paste0("out/remote_jobs/", job, "/out/sim", batch, ".rds")
+# sim <- readRDS(rs_path)
+# orig <- EpiModel::get_sims(sim, sim_no)
+
 rs_path <- paste0("out/remote_jobs/", job, "/out/sim", df[min_ind, 1], ".rds")
 sim <- readRDS(rs_path)
 orig <- EpiModel::get_sims(sim, df[min_ind, 2])
+
 orig$epi <- orig$epi["num"] # keep only the "num" epi tracker
 
 saveRDS(orig, "out/est/restart.rds")

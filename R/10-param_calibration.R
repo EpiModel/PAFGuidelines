@@ -1,22 +1,22 @@
 source("R/utils-slurm_prep_helpers.R") # requires `purrr`
 source("R/utils-slurm_wf.R")
-test_simulation <- TRUE
+test_simulation <- FALSE
 test_all_combination <- FALSE # Can grow super fast
 
 # Set slurm parameters ---------------------------------------------------------
 sim_per_batch <- 40    # How many simulation per bactch
-batch_per_set <- 5    # How many sim_per_batch replications to do per parameter
+batch_per_set <- 50    # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "k-PAF_calib_sti3"
+job_name <- "kPAF_restart"
 ssh_host <- "hyak_klone"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
 sim_per_batch <- 28    # How many simulation per bactch
-batch_per_set <- 16    # How many sim_per_batch replications to do per parameter
+batch_per_set <- 72    # How many sim_per_batch replications to do per parameter
 steps_to_keep <- NULL # Steps to keep in the output df. If NULL, return sim obj
 partition <- "ckpt"     # On hyak, either ckpt or csde
-job_name <- "PAF_calib_scale1"
+job_name <- "PAF_restart"
 ssh_host <- "hyak_mox"
 ssh_dir <- "gscratch/PAFGuidelines/"
 
@@ -52,8 +52,7 @@ param_proposals <- list(
     length.out = 4
   )
 )
-# c(2.53, 0.40, 0.275)
-# param_proposals <- list(base_params__ = TRUE)
+param_proposals <- list(base_params__ = TRUE)
 
 # Automatic --------------------------------------------------------------------
 
