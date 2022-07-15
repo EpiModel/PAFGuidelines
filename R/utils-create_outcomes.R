@@ -86,9 +86,7 @@ make_outcomes <- function(baseline_file, scenarios_files,
         test_sti = test_sti_hivneg + test_sti_hivpos,
         test_sti_pos_hivpos = test_rsti_pos_hivpos + test_usti_pos_hivpos,
         test_sti_pos_hivneg = test_rsti_pos_hivneg + test_usti_pos_hivneg,
-        test_sti_pos = test_sti_pos_hivneg + test_sti_pos_hivpos,
-
-
+        test_sti_pos = test_sti_pos_hivneg + test_sti_pos_hivpos
       )
   }
 
@@ -142,38 +140,68 @@ make_outcomes <- function(baseline_file, scenarios_files,
       cum_shared() %>%
       mutate(
         nia = (dbc$cum_incid - cum_incid),
+        nia_positive = ifelse(nia < 0, NA, nia),
         pia = nia / dbc$cum_incid,
         nnt = (test_hiv - dbc$test_hiv) / nia,
+        nnt_positive = (test_hiv - dbc$test_hiv) / nia_positive,
+
         nia_gc_hivpos = (dbc$cum_incid_gc_hivpos - cum_incid_gc_hivpos),
+        nia_gc_hivpos_positive = ifelse(nia_gc_hivpos < 0, NA, nia_gc_hivpos),
         pia_gc_hivpos = nia_gc_hivpos / dbc$cum_incid_gc_hivpos,
         nnt_gc_hivpos = (test_gc_hivpos - dbc$test_gc_hivpos) / nia_gc_hivpos,
+        nnt_gc_hivpos_positive = (test_gc_hivpos - dbc$test_gc_hivpos) / nia_gc_hivpos_positive,
+
         nia_gc_hivneg = (dbc$cum_incid_gc_hivneg - cum_incid_gc_hivneg),
+        nia_gc_hivneg_positive = ifelse(nia_gc_hivneg < 0, NA, nia_gc_hivneg),
         pia_gc_hivneg = nia_gc_hivneg / dbc$cum_incid_gc_hivneg,
         nnt_gc_hivneg = (test_gc_hivneg - dbc$test_gc_hivneg) / nia_gc_hivneg,
+        nnt_gc_hivneg_positive = (test_gc_hivneg - dbc$test_gc_hivneg) / nia_gc_hivneg_positive,
+
         nia_ct_hivpos = (dbc$cum_incid_ct_hivpos - cum_incid_ct_hivpos),
+        nia_ct_hivpos_positive = ifelse(nia_ct_hivpos < 0, NA, nia_ct_hivpos),
         pia_ct_hivpos = nia_ct_hivpos / dbc$cum_incid_ct_hivpos,
         nnt_ct_hivpos = (test_ct_hivpos - dbc$test_ct_hivpos) / nia_ct_hivpos,
+        nnt_ct_hivpos_positive = (test_ct_hivpos - dbc$test_ct_hivpos) / nia_ct_hivpos_positive,
+
         nia_ct_hivneg = (dbc$cum_incid_ct_hivneg - cum_incid_ct_hivneg),
+        nia_ct_hivneg_positive = ifelse(nia_ct_hivneg < 0, NA, nia_ct_hivneg),
         pia_ct_hivneg = nia_ct_hivneg / dbc$cum_incid_ct_hivneg,
         nnt_ct_hivneg = (test_ct_hivneg - dbc$test_ct_hivneg) / nia_ct_hivneg,
+        nnt_ct_hivneg_positive = (test_ct_hivneg - dbc$test_ct_hivneg) / nia_ct_hivneg_positive,
+
         nia_gc = nia_gc_hivpos + nia_gc_hivneg,
+        nia_gc_positive = ifelse(nia_gc < 0, NA, nia_gc),
         pia_gc = nia_gc /
           (dbc$cum_incid_gc_hivpos + dbc$cum_incid_gc_hivneg),
         nnt_gc = ((test_gc_hivpos + test_gc_hivneg) -
                   (dbc$test_gc_hivpos + dbc$test_gc_hivneg)) /
                   nia_gc,
+        nnt_gc_positive = ((test_gc_hivpos + test_gc_hivneg) -
+                  (dbc$test_gc_hivpos + dbc$test_gc_hivneg)) /
+                  nia_gc_positive,
         nia_ct = nia_ct_hivpos + nia_ct_hivneg,
+        nia_ct_positive = ifelse(nia_ct < 0, NA, nia_ct),
         pia_ct = nia_ct /
           (dbc$cum_incid_ct_hivpos + dbc$cum_incid_ct_hivneg),
         nnt_ct = ((test_ct_hivpos + test_ct_hivneg) -
                   (dbc$test_ct_hivpos + dbc$test_ct_hivneg)) /
                   nia_ct,
+        nnt_ct_positive = ((test_ct_hivpos + test_ct_hivneg) -
+                  (dbc$test_ct_hivpos + dbc$test_ct_hivneg)) /
+                  nia_ct_positive,
         nnt_hiv_sti = (
           (test_ct_hivpos + test_ct_hivneg +
            test_gc_hivpos + test_gc_hivneg) -
           (dbc$test_ct_hivpos + dbc$test_ct_hivneg +
            dbc$test_gc_hivpos + dbc$test_gc_hivneg)
          ) / nia,
+
+        nnt_hiv_sti_positive = (
+          (test_ct_hivpos + test_ct_hivneg +
+           test_gc_hivpos + test_gc_hivneg) -
+          (dbc$test_ct_hivpos + dbc$test_ct_hivneg +
+           dbc$test_gc_hivpos + dbc$test_gc_hivneg)
+         ) / nia_positive,
         cum_incid_diff = cum_incid - df_nst[["cum_incid"]][1],
         cum_incid_gc_hivpos_diff = cum_incid_gc_hivpos - df_nst[["cum_incid_gc_hivpos"]][1],
         cum_incid_gc_hivneg_diff = cum_incid_gc_hivneg - df_nst[["cum_incid_gc_hivneg"]][1],
@@ -274,10 +302,30 @@ make_table <- function(df_res, ql = 0.025, qm = 0.5, qh = 0.975) {
 
   df_res <- df_res %>%
     group_by(scenario) %>%
-    summarise(pct_nia = mean(nia > 0)) %>%
-    mutate(pct_nia = scales::label_percent(0.1)(pct_nia))
+    summarise(
+      pct_nia = mean(nia > 0),
+      pct_nia_gc_hivpos = mean(nia_gc_hivpos > 0),
+      pct_nia_gc_hivpos = mean(nia_gc_hivpos > 0),
+      pct_nia_gc_hivneg = mean(nia_gc_hivneg > 0),
+      pct_nia_ct_hivpos = mean(nia_ct_hivpos > 0),
+      pct_nia_ct_hivneg = mean(nia_ct_hivneg > 0),
+      pct_nia_gc = mean(nia_gc > 0),
+      pct_nia_ct = mean(nia_ct > 0)
+    ) %>%
+    mutate(
+      pct_nia = scales::label_percent(0.1)(pct_nia),
+      pct_nia_gc_hivpos = scales::label_percent(0.1)(pct_nia_gc_hivpos),
+      pct_nia_gc_hivneg = scales::label_percent(0.1)(pct_nia_gc_hivneg),
+      pct_nia_ct_hivpos = scales::label_percent(0.1)(pct_nia_ct_hivpos),
+      pct_nia_ct_hivneg = scales::label_percent(0.1)(pct_nia_ct_hivneg),
+      pct_nia_gc = scales::label_percent(0.1)(pct_nia_gc),
+      pct_nia_ct = scales::label_percent(0.1)(pct_nia_ct)
+    )
 
-  names(df_res) <- c("scenario", var_labels["pct_nia"])
+  names(df_res) <- c(
+    "scenario",
+    var_labels[names(df_res)[2:length(names(df_res))]]
+  )
 
   df_out <- left_join(df_out, df_res, scenario = scenario)
 
