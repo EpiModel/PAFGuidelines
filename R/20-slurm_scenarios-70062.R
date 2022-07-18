@@ -18,7 +18,7 @@ test_simulation <- TRUE
   batch_per_set <- ceiling(500 / sim_per_batch)   # How many sim_per_batch replications to do per parameter
   steps_to_keep <- 20 * 52 # Steps to keep in the output df. If NULL, return sim obj
   partition <- "ckpt" # "preemptable" #"ckpt"     # On hyak, either ckpt or csde
-  job_name <- paste0("PAF_sc_70062")
+  job_name <- paste0("PAF_sc_70062n")
   ssh_host <- "hyak_mox" # "rsph" # "hyak_klone"
   ssh_dir <- "gscratch/PAFGuidelines/" # "projects/PAFGuidelines"
   # for rsph: need to remouve "account" in the "slurm/job_scripts/blah.sh"
@@ -54,8 +54,10 @@ test_simulation <- TRUE
   # Scenarios --------------------------------------------------------------------
   # requires <list variables>
   source("R/utils-scenarios.R")
+  scenarios <- scenarios_no_sti_effect
   scenarios <- scenarios[
-    names(scenarios) %in% c("t1_7006", "t1_7007","t1_70062", "t1_70072")
+    names(scenarios) %in%
+      paste0(c("t1_7006", "t1_7007","t1_70062", "t1_70072"), "___no_sti_effect")
   ]
 
 
