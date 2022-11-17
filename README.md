@@ -4,7 +4,7 @@ This repository holds the source code to reproduce our analysis estimating the e
 
 # Citation
 
-Jones J, Le Guillou A, Gift TL, Chesson H, Bernstein K, Delaney K, Lyles C, Berruti A, Sullivan PS, Jenness SM. Effect of Screening and Treatment for Gonorrhea and Chlamydia on HIV Incidence among Men who Have Sex with Men in the United States: A Modeling Analysis. <i>Sexually Transmitted Diseases</i>
+Jones J, Le Guillou A, Gift TL, Chesson H, Bernstein KT, Delaney KP, Lyles C, Berruti A, Sullivan PS, Jenness SM. Effect of Screening and Treatment for Gonorrhea and Chlamydia on HIV Incidence Among Men Who Have Sex With Men in the United States: A Modeling Analysis. <i>Sex Transm Dis.</i> 2022 Oct 1;49(10):669-676. doi: 10.1097/OLQ.0000000000001685. Epub 2022 Jul 29. PMID: 35921635; PMCID: PMC9481699.
 
 # Abstract
 
