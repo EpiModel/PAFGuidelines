@@ -1,3 +1,5 @@
+# Manuscript 1
+
 # Effect of Screening and Treatment for Gonorrhea and Chlamydia on HIV Incidence among Men who Have Sex with Men in the United States: A Modeling Analysis
 
 This repository holds the source code to reproduce our analysis estimating the effect of increased screening for gonorrhea and chlamydia among men who have sex with men on downstream HIV incidence.
@@ -24,5 +26,16 @@ Increasing annual NG/CT screening among sexually active MSM by 60% averted 4.9% 
 
 Screening of NG/CT among MSM is expected to lead to modest but clinically relevant reductions in HIV incidence among MSM.
 
+# Manuscript 2
+
+# Estimated Number of Incident HIV Infections in Men Who Have Sex With Men Attributable to Gonorrhea and Chlamydia, Per Gonococcal or Chlamydial Infection, in the United States
+
+# Citation
+Jones J, Jenness SM, Le Guillou A, Sullivan PS, Gift TL, Delaney KP, Chesson H. Estimated Number of Incident HIV Infections in Men Who Have Sex With Men Attributable to Gonorrhea and Chlamydia, Per Gonococcal or Chlamydial Infection, in the United States. Sex Transm Dis. 2023 Feb 1;50(2):83-85. doi: 10.1097/OLQ.0000000000001724. Epub 2022 Oct 29. PMID: 36630415.
+
+# Abstract
+Using a network modeling approach, we estimate that the probability of a sexually transmitted infection–attributable HIV infection among men who have sex with men is 0.44% per gonococcal or chlamydial infection.
+
+Using a network model, we simulated transmission of HIV, gonorrhea, and chlamydia among men who have sex with men to estimate the number of HIV infections that can be attributed to gonorrhea and chlamydia, per gonococcal and chlamydial infection. This metric can inform future modeling and health economic studies.
 
 
