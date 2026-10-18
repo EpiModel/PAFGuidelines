@@ -1,3 +1,21 @@
+# Paper and engine
+
+This repository holds the code for two papers, described below. Both used the same EpiModelHIV engine.
+
+> Jones J, Le Guillou A, Gift TL, Chesson H, Bernstein KT, Delaney KP, Lyles C, Berruti A, Sullivan PS, Jenness SM. Effect of Screening and Treatment for Gonorrhea and Chlamydia on HIV Incidence Among Men Who Have Sex With Men in the United States: A Modeling Analysis. _Sex Transm Dis._ 2022; 49(10): 669-676. [doi:10.1097/OLQ.0000000000001685](https://doi.org/10.1097/OLQ.0000000000001685)
+
+> Jones J, Jenness SM, Le Guillou A, Sullivan PS, Gift TL, Delaney KP, Chesson H. Estimated Number of Incident HIV Infections in Men Who Have Sex With Men Attributable to Gonorrhea and Chlamydia, Per Gonococcal or Chlamydial Infection, in the United States. _Sex Transm Dis._ 2023; 50(2): 83-85. [doi:10.1097/OLQ.0000000000001724](https://doi.org/10.1097/OLQ.0000000000001724)
+
+The engine is release [`GCCT-STD`](https://github.com/EpiModel/EpiModelHIV/releases/tag/GCCT-STD) of EpiModel/EpiModelHIV. Install it with:
+
+```r
+remotes::install_github("EpiModel/EpiModelHIV@GCCT-STD")
+```
+
+The supplements to both papers name the CombPrevNet branch, but the code here was run on the engine in this release.
+
+ARTnetData is a private package. It is needed only to re-estimate the networks.
+
 # Manuscript 1
 
 # Effect of Screening and Treatment for Gonorrhea and Chlamydia on HIV Incidence among Men who Have Sex with Men in the United States: A Modeling Analysis
