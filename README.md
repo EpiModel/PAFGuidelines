@@ -14,7 +14,7 @@ remotes::install_github("EpiModel/EpiModelHIV@GCCT-STD")
 
 The supplements to both papers name the CombPrevNet branch, but the code here was run on the engine in this release.
 
-ARTnetData is a private package. It is needed only to re-estimate the networks.
+ARTnetData is a private package. It is needed only to re-estimate the networks. The paper's networks were estimated with ARTnet 2.5.0, which is no longer public, so `renv.lock` installs ARTnet 2.9.3, the first version in the public [ARTnet](https://github.com/EpiModel/ARTnet) repository. Networks re-estimated with it may not match the paper's exactly.
 
 # Manuscript 1
 
